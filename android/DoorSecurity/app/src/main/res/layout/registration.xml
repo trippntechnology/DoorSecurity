@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tokenText"
+        android:layout_marginTop="178dp"
+        android:minWidth="150dp"
+        android:hint="Enter token"
+        android:gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"
+        android:id="@+id/registerButton"
+        android:onClick="registerButton"
+        android:nestedScrollingEnabled="false"
+        android:layout_marginTop="106dp"
+        android:layout_below="@+id/tokenText"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/urlText"
+        android:layout_alignBottom="@+id/tokenText"
+        android:layout_marginBottom="44dp"
+        android:minWidth="150dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:hint="Enter URL"
+        android:text="http://10.0.0.63:12345" />
+</RelativeLayout>

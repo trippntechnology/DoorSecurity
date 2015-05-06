@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Door Security</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_register">Register</string>
+    <string name="token_text_is_null">Please enter a token!</string>
+    <string name="mac_phone_error">Couldn\'t find mac address or phone number!</string>
+    <string name="phonenumber_error">Couldn\'t find phone number!</string>
+    <string name="return_key_error">Error retrieving key</string>
+    <string name="delete_registration">Delete Registration</string>
+    <string name="success">Success</string>
+    <string name="connection_error">Could not connect to server!</string>
+    <string name="storing_key_error">Error storing key!</string>
+</resources>
