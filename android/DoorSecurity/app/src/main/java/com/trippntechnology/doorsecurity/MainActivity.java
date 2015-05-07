@@ -51,7 +51,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (checkFileExistence(REGISTRATION_FILE) && checkFileExistence(IV_FILE)) {
+        if (checkFileExistence(REGISTRATION_FILE) || checkFileExistence(IV_FILE)) {
             setContentView(R.layout.activity_main);
         } else {
             Intent i = new Intent(this, Register.class);
@@ -190,8 +190,10 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.delete_registration) {
             File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
             File file1 = getBaseContext().getFileStreamPath(IV_FILE);
+            File file2 = getBaseContext().getFileStreamPath(URL);
             file1.delete();
             file.delete();
+            file2.delete();
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
             finish();
