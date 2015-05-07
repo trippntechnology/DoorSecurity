@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -219,6 +220,9 @@ public class Register extends ActionBarActivity {
                 toast.show();
             }
         });
+        InputMethodManager imm = (InputMethodManager)getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(token.getWindowToken(), 0);
     }
 
     public String getMacAddress() {
