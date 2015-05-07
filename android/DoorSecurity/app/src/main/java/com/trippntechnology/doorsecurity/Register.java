@@ -13,7 +13,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -57,9 +65,9 @@ public class Register extends ActionBarActivity {
         RO.PhoneNumber = getPhoneNumber();
         RO.Token = token.getText().toString();
         final String url = urlBox.getText().toString();
-        //Request queue
-//        RequestQueue requestQueue = Volley.newRequestQueue(this);
-//
+//        Request queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
 //        //Rest call
 //        Gson gson = new Gson();
 //        String json = gson.toJson(RO);
@@ -69,83 +77,71 @@ public class Register extends ActionBarActivity {
 //        } catch (JSONException e) {
 //            e.printStackTrace();
 //        }
-//
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,
-//                jsonObject, new com.android.volley.Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject jsonObject) {
-//                Toast toast = Toast.makeText(getApplicationContext(),jsonObject.toString(),Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        }, new com.android.volley.Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-//                Toast toast = Toast.makeText(getApplicationContext(),volleyError.getMessage(),Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//        });
-//
-//
-//
-//        KeyReturnRequest key = new KeyReturnRequest(url,
-//                json, progressDialog, new com.android.volley.Response.Listener<KeyReturn>() {
-//            @Override
-//            public void onResponse(KeyReturn keyReturn) {
-//                boolean success = Boolean.parseBoolean(keyReturn.Success);
-//                if (success) {
-//                    byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
-//                    byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
-//                    try {
-//                        fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
-//                        fos.write(key);
-//                        fos = openFileOutput(IV_FILE, MODE_PRIVATE);
-//                        fos.write(IV);
-//                        fos = openFileOutput(URL, MODE_PRIVATE);
-//                        fos.write(url.getBytes());
-//                        fos.close();
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivity(i);
-//                        finish();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.storing_key_error, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//
-//                } else {
-//                    if (keyReturn.Message == null || keyReturn.Message == "") {
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.return_key_error, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    } else {
-//                        Toast toast = Toast.makeText(getApplicationContext(), keyReturn.Message, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//                }
-//            }
-//        }, new com.android.volley.Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-////                if (volleyError.getMessage().contains("failed to connect")) {
-////                    Toast toast = Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_SHORT);
-////                    toast.show();
-////                } else {
-//                    Toast toast = Toast.makeText(getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_LONG);
+
+
+
+        KeyReturnRequest key = new KeyReturnRequest(url,
+                RO, new com.android.volley.Response.Listener<KeyReturn>() {
+            @Override
+            public void onResponse(KeyReturn keyReturn) {
+                boolean success = Boolean.parseBoolean(keyReturn.Success);
+                if (success) {
+                    byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
+                    byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
+                    try {
+                        fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
+                        fos.write(key);
+                        fos = openFileOutput(IV_FILE, MODE_PRIVATE);
+                        fos.write(IV);
+                        fos = openFileOutput(URL, MODE_PRIVATE);
+                        fos.write(url.getBytes());
+                        fos.close();
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT);
+                        toast.show();
+                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(i);
+                        finish();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.storing_key_error, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+
+                } else {
+                    if (keyReturn.Message == null || keyReturn.Message == "") {
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.return_key_error, Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), keyReturn.Message, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+//                if (volleyError.getMessage().contains("failed to connect")) {
+//                    Toast toast = Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_SHORT);
 //                    toast.show();
-////                }
+//                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_LONG);
+                    toast.show();
+//                }
 //                progressDialog.dismiss();
-//            }
-//        });
-//        requestQueue.add(jsonObjectRequest);
+            }
+        });
+
+        requestQueue.add(key);
 
 //                Set-up restAdapter
+        /**
         OkHttpClient http = new OkHttpClient();
         http.setConnectTimeout(6000, TimeUnit.MILLISECONDS);
         RestAdapter restAdapter = new RestAdapter.Builder().
                 setClient(new OkClient(http))
                 .setEndpoint(url).build();
         Interface client = restAdapter.create(Interface.class);
+        */
 //
 //                Get key
 //        KeyReturn keyReturn = client.registerr(RO);
@@ -175,7 +171,7 @@ public class Register extends ActionBarActivity {
 //            toast.show();
 //        }
 //
-
+        /**
         client.register(RO, new Callback<KeyReturn>() {
             @Override
             public void success(KeyReturn keyReturn, Response response) {
@@ -223,6 +219,7 @@ public class Register extends ActionBarActivity {
         InputMethodManager imm = (InputMethodManager)getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(token.getWindowToken(), 0);
+         */
     }
 
     public String getMacAddress() {
