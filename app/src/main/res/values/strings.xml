@@ -12,4 +12,5 @@
     <string name="success">Success</string>
     <string name="connection_error">Could not connect to server!</string>
     <string name="storing_key_error">Error storing key!</string>
+    <string name="cooldown">Please wait before sending another request</string>
 </resources>
