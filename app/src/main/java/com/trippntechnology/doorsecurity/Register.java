@@ -215,11 +215,11 @@ public class Register extends ActionBarActivity {
                 Toast toast = Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_LONG);
                 toast.show();
             }
-        });
+        });*/
         InputMethodManager imm = (InputMethodManager)getSystemService(
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(token.getWindowToken(), 0);
-         */
+
     }
 
     public String getMacAddress() {
