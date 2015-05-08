@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.Map;
 
 

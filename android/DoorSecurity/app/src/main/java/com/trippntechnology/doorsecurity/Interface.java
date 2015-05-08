@@ -15,7 +15,7 @@ public interface Interface {
     KeyReturn registerr(@Body RegistrationObject registrationObject);
 
     @POST("/Open")
-    void openDoor(@Body DoorObject doorObject, Callback<String> callback);
+    void openDoor(@Body DoorObject doorObject, Callback<DoorResponse> callback);
 
     @POST("/Open")
     String openDoorr(@Body DoorObject doorObject);
