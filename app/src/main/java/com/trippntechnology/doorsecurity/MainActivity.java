@@ -70,29 +70,30 @@ public class MainActivity extends ActionBarActivity {
 
     public void openDoor(View view) {
         //getTime
-        if (canOpen) {
-            SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
-            f.setTimeZone(TimeZone.getTimeZone("UTC"));
-            String time = f.format(new Date());
+//        if (canOpen) {
+        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
+        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        final String time = f.format(new Date());
 
-            //Initialize
-            byte[] key = readFile(REGISTRATION_FILE);
-            byte[] iv = readFile(IV_FILE);
-            String url = new String(readFile(URL));
+        //Initialize
+        byte[] key = readFile(REGISTRATION_FILE);
+        byte[] iv = readFile(IV_FILE);
+        String url = new String(readFile(URL));
 
-            String macAddressTime = macAddress + "|" + time;
-            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
+        String macAddressTime = macAddress + "|" + time;
+        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-            //Encrypt
-            byte[] encrypted = null;
-            try {
-                Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                c.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-                encrypted = c.doFinal(macAddressTime.getBytes());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        //Encrypt
+        byte[] encrypted = null;
+        try {
+            Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            c.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+            encrypted = c.doFinal(macAddressTime.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (encrypted != null) {
             String encodedString = Base64.encodeToString(encrypted, Base64.NO_WRAP);
             Log.i(TAG, encodedString);
             DoorObject door = new DoorObject(encodedString, phoneNumber);
@@ -101,27 +102,36 @@ public class MainActivity extends ActionBarActivity {
             RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url).build();
             Interface client = restAdapter.create(Interface.class);
 
-            client.openDoor(door, new Callback<String>() {
+            client.openDoor(door, new Callback<DoorResponse>() {
                 @Override
-                public void success(String s, Response response) {
+                public void success(DoorResponse doorResponse, Response response) {
+                    boolean success = Boolean.parseBoolean(doorResponse.Success);
+                    String message = doorResponse.Message;
 
+                    Toast toast = Toast.makeText(getApplication(), success + "\n" + message, Toast.LENGTH_SHORT);
+                    toast.show();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-
+                    Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
+                    toast.show();
                 }
             });
-            canOpen = false;
-            while (!canOpen){
-                SystemClock.sleep(5000);
-                canOpen = true;
-            }
-
         } else {
-            Toast toast = Toast.makeText(this, R.string.cooldown, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.encryption_error, Toast.LENGTH_SHORT);
             toast.show();
         }
+//            canOpen = false;
+//            while (!canOpen){
+//                SystemClock.sleep(5000);
+//                canOpen = true;
+//            }
+
+//        } else {
+//            Toast toast = Toast.makeText(this, R.string.cooldown, Toast.LENGTH_LONG);
+//            toast.show();
+//        }
 
     }
 

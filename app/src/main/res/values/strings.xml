@@ -13,4 +13,5 @@
     <string name="connection_error">Could not connect to server!</string>
     <string name="storing_key_error">Error storing key!</string>
     <string name="cooldown">Please wait before sending another request</string>
+    <string name="encryption_error">Error encrypting string</string>
 </resources>
