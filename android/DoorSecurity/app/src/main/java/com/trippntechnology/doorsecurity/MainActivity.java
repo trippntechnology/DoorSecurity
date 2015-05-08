@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,6 +48,7 @@ public class MainActivity extends ActionBarActivity {
 
     private String macAddress;
     private String phoneNumber;
+    private boolean canOpen;
 
 
     @Override
@@ -67,47 +70,58 @@ public class MainActivity extends ActionBarActivity {
 
     public void openDoor(View view) {
         //getTime
-        SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
-        f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String time = f.format(new Date());
+        if (canOpen) {
+            SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
+            f.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String time = f.format(new Date());
 
-        //Initialize
-        byte[] key = readFile(REGISTRATION_FILE);
-        byte[] iv = readFile(IV_FILE);
-        String url = new String(readFile(URL));
+            //Initialize
+            byte[] key = readFile(REGISTRATION_FILE);
+            byte[] iv = readFile(IV_FILE);
+            String url = new String(readFile(URL));
 
-        String macAddressTime = macAddress +"|"+ time;
-        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
-        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+            String macAddressTime = macAddress + "|" + time;
+            SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
+            IvParameterSpec ivSpec = new IvParameterSpec(iv);
 
-        //Encrypt
-        byte[] encrypted = null;
-        try {
-            Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            c.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-            encrypted = c.doFinal(macAddressTime.getBytes());
-        } catch (Exception e) {
-            e.printStackTrace();
+            //Encrypt
+            byte[] encrypted = null;
+            try {
+                Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                c.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+                encrypted = c.doFinal(macAddressTime.getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String encodedString = Base64.encodeToString(encrypted, Base64.NO_WRAP);
+            Log.i(TAG, encodedString);
+            DoorObject door = new DoorObject(encodedString, phoneNumber);
+
+            //Rest Call
+            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url).build();
+            Interface client = restAdapter.create(Interface.class);
+
+            client.openDoor(door, new Callback<String>() {
+                @Override
+                public void success(String s, Response response) {
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+            canOpen = false;
+            while (!canOpen){
+                SystemClock.sleep(5000);
+                canOpen = true;
+            }
+
+        } else {
+            Toast toast = Toast.makeText(this, R.string.cooldown, Toast.LENGTH_LONG);
+            toast.show();
         }
-        String encodedString = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-        Log.i(TAG,encodedString);
-        DoorObject door = new DoorObject(encodedString, phoneNumber);
-
-        //Rest Call
-        RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url).build();
-        Interface client = restAdapter.create(Interface.class);
-
-        client.openDoor(door, new Callback<String>() {
-            @Override
-            public void success(String s, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        });
 
     }
 
@@ -127,7 +141,7 @@ public class MainActivity extends ActionBarActivity {
         return tMgr.getLine1Number();
     }
 
-    public byte[] readFile(String filename){
+    public byte[] readFile(String filename) {
         int bytesRead;
         byte[] bytes = null;
         try {
