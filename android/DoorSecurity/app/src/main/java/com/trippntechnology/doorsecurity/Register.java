@@ -48,7 +48,7 @@ public class Register extends ActionBarActivity {
     String key;
     FileOutputStream fos;
     RegistrationObject RO = new RegistrationObject();
-
+    Request request = new Request();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,77 +61,10 @@ public class Register extends ActionBarActivity {
     public void registerButton(View view) {
 //        progressDialog.show();
 
-        RO.MacAddress = getMacAddress();
-        RO.PhoneNumber = getPhoneNumber();
+        RO.MacAddress = request.getMacAddress();
+        RO.PhoneNumber = request.getPhoneNumber();
         RO.Token = token.getText().toString();
         final String url = urlBox.getText().toString();
-//        Request queue
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-//        //Rest call
-//        Gson gson = new Gson();
-//        String json = gson.toJson(RO);
-//        JSONObject jsonObject =null;
-//        try {
-//            jsonObject = new JSONObject(json);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//
-//        KeyReturnRequest key = new KeyReturnRequest(url,
-//                RO, new com.android.volley.Response.Listener<KeyReturn>() {
-//            @Override
-//            public void onResponse(KeyReturn keyReturn) {
-//                boolean success = Boolean.parseBoolean(keyReturn.Success);
-//                if (success) {
-//                    byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
-//                    byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
-//                    try {
-//                        fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
-//                        fos.write(key);
-//                        fos = openFileOutput(IV_FILE, MODE_PRIVATE);
-//                        fos.write(IV);
-//                        fos = openFileOutput(URL, MODE_PRIVATE);
-//                        fos.write(url.getBytes());
-//                        fos.close();
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                        startActivity(i);
-//                        finish();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.storing_key_error, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//
-//                } else {
-//                    if (keyReturn.Message == null || keyReturn.Message == "") {
-//                        Toast toast = Toast.makeText(getApplicationContext(), R.string.return_key_error, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    } else {
-//                        Toast toast = Toast.makeText(getApplicationContext(), keyReturn.Message, Toast.LENGTH_SHORT);
-//                        toast.show();
-//                    }
-//                }
-//            }
-//        }, new com.android.volley.Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-////                if (volleyError.getMessage().contains("failed to connect")) {
-////                    Toast toast = Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_SHORT);
-////                    toast.show();
-////                } else {
-//                    Toast toast = Toast.makeText(getApplicationContext(), volleyError.getMessage(), Toast.LENGTH_LONG);
-//                    toast.show();
-////                }
-////                progressDialog.dismiss();
-//            }
-//        });
-
-//        requestQueue.add(key);
 
 //                Set-up restAdapter
 
@@ -141,36 +74,6 @@ public class Register extends ActionBarActivity {
                 setClient(new OkClient(http))
                 .setEndpoint(url).build();
         Interface client = restAdapter.create(Interface.class);
-
-//
-//                Get key
-//        KeyReturn keyReturn = client.registerr(RO);
-//        boolean success = Boolean.parseBoolean(keyReturn.Success);
-//        if (success) {
-//            byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
-//            byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
-//            try {
-//                fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
-//                fos.write(key);
-//                fos = openFileOutput(IV_FILE, MODE_APPEND);
-//                fos.write(IV);
-//                fos.close();
-//                Toast toast = Toast.makeText(this, R.string.success, Toast.LENGTH_SHORT);
-//                toast.show();
-//                Intent i = new Intent(this, MainActivity.class);
-//                startActivity(i);
-//                finish();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                Toast toast = Toast.makeText(this,R.string.storing_key_error,Toast.LENGTH_SHORT);
-//                toast.show();
-//            }
-//
-//        } else {
-//            Toast toast = Toast.makeText(this, keyReturn.Message, Toast.LENGTH_SHORT);
-//            toast.show();
-//        }
-//
 
         client.register(RO, new Callback<KeyReturn>() {
             @Override
@@ -220,17 +123,6 @@ public class Register extends ActionBarActivity {
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(token.getWindowToken(), 0);
 
-    }
-
-    public String getMacAddress() {
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wInfo = wifiManager.getConnectionInfo();
-        return wInfo.getMacAddress();
-    }
-
-    public String getPhoneNumber() {
-        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return tMgr.getLine1Number();
     }
 
 }
