@@ -7,14 +7,12 @@ public class KeyReturn {
     String IV;
     String Success;
     String Message;
-    String YourName;
 
-    public KeyReturn(String IV, String key, String message, String success, String YourName) {
+    public KeyReturn(String IV, String key, String message, String success) {
         this.IV = IV;
         Key = key;
         Message = message;
         Success = success;
-        this.YourName = YourName;
     }
     public KeyReturn(){}
 }
