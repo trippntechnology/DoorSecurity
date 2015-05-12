@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.view.View;
@@ -13,15 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +27,7 @@ import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 
-public class Register extends ActionBarActivity {
+public class Register extends AppCompatActivity {
 
     private static final String TAG = "KEY TAG";
     private static final String REGISTRATION_FILE = "RegistrationKey";
@@ -43,12 +36,9 @@ public class Register extends ActionBarActivity {
 
     EditText token;
     EditText urlBox;
-    TestDal dal = new TestDal();
 
-    String key;
     FileOutputStream fos;
     RegistrationObject RO = new RegistrationObject();
-    Request request = new Request();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +51,8 @@ public class Register extends ActionBarActivity {
     public void registerButton(View view) {
 //        progressDialog.show();
 
-        RO.MacAddress = request.getMacAddress();
-        RO.PhoneNumber = request.getPhoneNumber();
+        RO.MacAddress = getMacAddress();
+        RO.PhoneNumber = getPhoneNumber();
         RO.Token = token.getText().toString();
         final String url = urlBox.getText().toString();
 
@@ -123,6 +113,18 @@ public class Register extends ActionBarActivity {
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(token.getWindowToken(), 0);
 
+    }
+
+
+    public String getMacAddress() {
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        return wInfo.getMacAddress();
+    }
+
+    public String getPhoneNumber() {
+        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        return tMgr.getLine1Number();
     }
 
 }

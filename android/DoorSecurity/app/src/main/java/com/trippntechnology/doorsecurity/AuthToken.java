@@ -10,9 +10,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AuthToken extends Request {
 
-    public byte[] encrypt(SecretKeySpec keySpec, IvParameterSpec parameterSpec){
+    public byte[] encrypt(SecretKeySpec keySpec, IvParameterSpec parameterSpec,String macAddress){
         byte[] encrypted = null;
-        String mac = getAuthToken();
+        String mac = getAuthToken(macAddress);
 
         try {
             Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -24,8 +24,8 @@ public class AuthToken extends Request {
         return encrypted;
     }
 
-    public String getAuthToken(){
-        return getMacAddress()+"|"+getTime();
+    public String getAuthToken(String macAddress){
+        return macAddress+"|"+getTime();
     }
 
     public String getTime(){
