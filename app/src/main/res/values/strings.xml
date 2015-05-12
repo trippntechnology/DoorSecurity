@@ -7,11 +7,14 @@
     <string name="token_text_is_null">Please enter a token!</string>
     <string name="mac_phone_error">Couldn\'t find mac address or phone number!</string>
     <string name="phonenumber_error">Couldn\'t find phone number!</string>
-    <string name="return_key_error">Error retrieving key</string>
+    <string name="return_key_error">Registration Error!</string>
     <string name="delete_registration">Delete Registration</string>
     <string name="success">Success</string>
     <string name="connection_error">Could not connect to server!</string>
     <string name="storing_key_error">Error storing key!</string>
     <string name="cooldown">Please wait before sending another request</string>
     <string name="encryption_error">Error encrypting string</string>
+    <string name="relay_return_error">No door access!</string>
+    <string name="door_open_success">Door successfully unlocked</string>
+    <string name="door_open_failure">Failed to unlock door</string>
 </resources>
