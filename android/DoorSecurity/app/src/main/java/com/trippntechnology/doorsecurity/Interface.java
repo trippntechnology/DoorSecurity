@@ -11,13 +11,9 @@ public interface Interface {
     @POST("/Register")
     void register(@Body RegistrationObject registrationObject, Callback<KeyReturn> callback);
 
-    @POST("/Register")
-    KeyReturn registerr(@Body RegistrationObject registrationObject);
-
     @POST("/Open")
-    void openDoor(@Body DoorObject doorObject, Callback<DoorResponse> callback);
+    void openDoor(@Body DoorObject doorObject, Callback<StandardResponse> callback);
 
-    @POST("/Open")
-    String openDoorr(@Body DoorObject doorObject);
-
+    @POST("/GetRelays")
+    void getDoors(@Body DoorObject doorObject,Callback<Relays[]> callback);
 }
