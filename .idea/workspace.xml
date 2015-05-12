@@ -34,19 +34,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="4d419559-bbab-499f-9994-7362c2e1aa96" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/GetRelays.java" />
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\RestDal.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\TestDal.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/AuthToken.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/AuthToken.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Interface.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Interface.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Register.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Register.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Request.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Request.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/StandardResponse.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/StandardResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\Relays.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Relay.java" />
     </list>
     <ignored path="DoorSecurity.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,11 +66,10 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.1519337">
-              <caret line="286" column="95" selection-start-line="286" selection-start-column="95" selection-end-line="286" selection-end-column="95" />
+              <caret line="286" column="61" selection-start-line="286" selection-start-column="61" selection-end-line="286" selection-end-column="61" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#11330#11356#0" expanded="true" />
-                <element signature="e#11628#11654#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1967,7 +1954,13 @@
       <option name="project" value="LOCAL" />
       <updated>1431401584956</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Successful dynamic test version">
+      <created>1431406002619</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1431406002619</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2050,7 +2043,8 @@
     <MESSAGE value="Demo Version&#10;" />
     <MESSAGE value="Add Dynamic layout&#10;Add Better Class Management&#10;&#10;" />
     <MESSAGE value="Add Dynamic layout&#10;Add Better Class Management&#10;resubmit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Dynamic layout&#10;Add Better Class Management&#10;resubmit" />
+    <MESSAGE value="Successful dynamic test version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Successful dynamic test version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2100,7 +2094,6 @@
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#11330#11356#0" expanded="true" />
-            <element signature="e#11628#11654#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2468,11 +2461,10 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1519337">
-          <caret line="286" column="95" selection-start-line="286" selection-start-column="95" selection-end-line="286" selection-end-column="95" />
+          <caret line="286" column="61" selection-start-line="286" selection-start-column="61" selection-end-line="286" selection-end-column="61" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#11330#11356#0" expanded="true" />
-            <element signature="e#11628#11654#0" expanded="true" />
           </folding>
         </state>
       </provider>
