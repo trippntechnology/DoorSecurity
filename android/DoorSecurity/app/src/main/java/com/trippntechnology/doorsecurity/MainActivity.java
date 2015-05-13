@@ -14,6 +14,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private SecretKeySpec keySpec;
     private IvParameterSpec ivSpec;
     private LinearLayout main;
+    private LinearLayout.LayoutParams buttonParams;
+    private LinearLayout.LayoutParams params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,23 @@ public class MainActivity extends AppCompatActivity {
             //Create restcall
             RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url).build();
             client = restAdapter.create(Interface.class);
+            int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    60,
+                    getResources().getDisplayMetrics());
+            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    130,
+                    getResources().getDisplayMetrics());
+            int verticalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    5,
+                    getResources().getDisplayMetrics());
+            int horizontalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    20,
+                    getResources().getDisplayMetrics());
+            params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            buttonParams = new LinearLayout.LayoutParams(width, height);
+            buttonParams.setMargins(horizontalMargins, verticalMargins,
+                    horizontalMargins, verticalMargins);
         } else {
             Intent i = new Intent(this, Register.class);
             startActivity(i);
@@ -87,52 +108,8 @@ public class MainActivity extends AppCompatActivity {
             public void success(GetRelays getRelays, Response response) {
                 //Set sizes in DP
                 if (getRelays.Relays != null && getRelays.Relays.length >= 1) {
-                    int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            60,
-                            getResources().getDisplayMetrics());
-                    int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            130,
-                            getResources().getDisplayMetrics());
-                    int verticalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            5,
-                            getResources().getDisplayMetrics());
-                    int horizontalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                            20,
-                            getResources().getDisplayMetrics());
-                    //Create LayoutParameters
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(width, height);
-                    buttonParams.setMargins(horizontalMargins, verticalMargins,
-                            horizontalMargins, verticalMargins);
-                    //Get Context
-                    Context context = getApplicationContext();
-                    //Generate Layout
-                    for (int i = 0; i < getRelays.Relays.length; i += 2) {
-                        LinearLayout ll = new LinearLayout(context);
-                        ll.setOrientation(LinearLayout.HORIZONTAL);
-                        ll.setLayoutParams(params);
-                        ll.setGravity(LinearLayout.VERTICAL);
-                        if (i == (getRelays.Relays.length - 1)) {
-                            Button b = new Button(context);
-                            b.setLayoutParams(buttonParams);
-                            b.setId(getRelays.Relays[i].ID);
-                            b.setText(getRelays.Relays[i].Description);
-                            b.setOnClickListener(new DoorButtonListener());
-                            ll.addView(b);
-                        } else {
-                            for (int j = 0; j < 2; j++) {
-                                Button b = new Button(context);
-                                b.setLayoutParams(buttonParams);
-                                b.setId(getRelays.Relays[i + j].ID);
-                                b.setText(getRelays.Relays[i + j].Description);
-                                b.setOnClickListener(new DoorButtonListener());
-                                ll.addView(b);
-                            }
-                        }
-                        main.addView(ll);
-                    }
-                }else{
+                    createLayout(getRelays.Relays);
+                } else {
                     TextView tv = new TextView(getApplicationContext());
                     tv.setText(R.string.relay_return_error);
                     tv.setTextColor(Color.BLACK);
@@ -159,37 +136,42 @@ public class MainActivity extends AppCompatActivity {
         main.removeAllViews();
     }
 
-//    public void openDoor(View view) {
-//        //Initialize
-//        SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
-//        IvParameterSpec ivSpec = new IvParameterSpec(iv);
-//        //Encrypt
-//        encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
-//        if (encrypted != null) {
-//            door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-//            //Rest Call
-//            client.openDoor(door, new Callback<StandardResponse>() {
-//                @Override
-//                public void success(StandardResponse standardResponse, Response response) {
-//                    boolean success = Boolean.parseBoolean(standardResponse.Success);
-//                    String message = standardResponse.Message;
-//
-//                    Toast toast = Toast.makeText(getApplication(), success + "\n" + message, Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//
-//                @Override
-//                public void failure(RetrofitError error) {
-//                    Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
-//                    toast.show();
-//                }
-//            });
-//        } else {
-//            Toast toast = Toast.makeText(this, R.string.encryption_error, Toast.LENGTH_SHORT);
-//            toast.show();
-//        }
-//
-//    }
+    public void createLayout(Relay[] relays) {
+        int divide = 1;
+        for (int i = 0; i < relays.length; i += 2) {
+            LinearLayout ll = new LinearLayout(this);
+            ll.setOrientation(LinearLayout.HORIZONTAL);
+            ll.setLayoutParams(params);
+            ll.setGravity(LinearLayout.VERTICAL);
+            if (i == (relays.length - 1)) {
+                ll.addView(createButton(relays[i]));
+            } else {
+                for (int j = 0; j < 2; j++) {
+                    ll.addView(createButton(relays[i + j]));
+                }
+            }
+            TranslateAnimation animation = new TranslateAnimation(0, 0, 1500, 0);
+            long time = AnimationUtils.currentAnimationTimeMillis() + (100 * i);
+            animation.setStartTime(time);
+            if (i<30) {
+                animation.setDuration((long) (1000 / divide));
+                divide+=.4;
+            }else {
+                animation.setDuration(50);
+            }
+            ll.setAnimation(animation);
+            main.addView(ll);
+        }
+    }
+
+    public Button createButton(Relay relay) {
+        Button b = new Button(this);
+        b.setLayoutParams(buttonParams);
+        b.setId(relay.ID);
+        b.setText(relay.Description);
+        b.setOnClickListener(new DoorButtonListener());
+        return b;
+    }
 
     public boolean checkFileExistence(String fileName) {
         File file = getBaseContext().getFileStreamPath(fileName);
@@ -281,10 +263,10 @@ public class MainActivity extends AppCompatActivity {
 
                             Toast toast = Toast.makeText(getApplicationContext(), R.string.door_open_success, Toast.LENGTH_SHORT);
                             toast.show();
-                        }else {
+                        } else {
                             String message = standardResponse.Message;
                             Toast.makeText(getApplicationContext(),
-                                    R.string.door_open_failure+"\n"+message,Toast.LENGTH_LONG);
+                                    R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG);
                         }
                     }
 
