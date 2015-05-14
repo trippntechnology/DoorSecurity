@@ -17,4 +17,5 @@
     <string name="relay_return_error">No door access!</string>
     <string name="door_open_success">Door successfully unlocked</string>
     <string name="door_open_failure">Failed to unlock door</string>
+    <string name="copyright">\u00A9 Tripp\'n Technology, LLC 2015</string>
 </resources>
