@@ -20,4 +20,7 @@
     <string name="copyright">\u00A9 Tripp\'n Technology, LLC 2015</string>
     <string name="register_string">Register</string>
     <string name="enter_token_string">Enter token</string>
+    <string name="progress_title_register">Registering</string>
+    <string name="progress_title_main">Retrieving doors</string>
+    <string name="progress_title_open">Unlcoking door</string>
 </resources>

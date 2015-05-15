@@ -1,6 +1,7 @@
 package com.trippntechnology.doorsecurity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,10 +23,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.OkHttpClient;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,6 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 
@@ -52,26 +57,36 @@ public class MainActivity extends Activity {
     private LinearLayout main;
     private LinearLayout.LayoutParams buttonParams;
     private LinearLayout.LayoutParams params;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (checkFileExistence(REGISTRATION_FILE) || checkFileExistence(IV_FILE)) {
             setContentView(R.layout.activity_main);
+
             //Get layout
             main = (LinearLayout) findViewById(R.id.layoutMain);
+
             //Get files
             key = readFile(REGISTRATION_FILE);
             iv = readFile(IV_FILE);
             String url = new String(readFile(URL));
+
             //Generate encryption keys
             keySpec = new SecretKeySpec(key, "AES");
             ivSpec = new IvParameterSpec(iv);
+
             //Get number
             door.PhoneNumber = getPhoneNumber();
+
             //Create restcall
-            RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(url).build();
+            OkHttpClient http = new OkHttpClient();
+            http.setConnectTimeout(6000, TimeUnit.MILLISECONDS);
+            RestAdapter restAdapter = new RestAdapter.Builder().setClient(new OkClient(http)).setEndpoint(url).build();
             client = restAdapter.create(Interface.class);
+
+            //Create dp sizes
             int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     60,
                     getResources().getDisplayMetrics());
@@ -79,16 +94,25 @@ public class MainActivity extends Activity {
                     130,
                     getResources().getDisplayMetrics());
             int verticalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    5,
+                    10,
                     getResources().getDisplayMetrics());
             int horizontalMargins = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     20,
                     getResources().getDisplayMetrics());
+
+            //Create layoutparams
             params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
             buttonParams = new LinearLayout.LayoutParams(width, height);
+
             buttonParams.setMargins(horizontalMargins, verticalMargins,
                     horizontalMargins, verticalMargins);
+
+            //Progress dialog
+            progress = new ProgressDialog(this);
+            progress.setTitle(R.string.progress_title_main);
+            progress.setMessage("Getting available doors");
         } else {
             Intent i = new Intent(this, Register.class);
             startActivity(i);
@@ -101,31 +125,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        progress.show();
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
         client.getDoors(door, new Callback<GetRelays>() {
-            // button will be displayed
             @Override
             public void success(GetRelays getRelays, Response response) {
-                //Set sizes in DP
-                if (getRelays.Relays != null && getRelays.Relays.length >= 1) {
-                    createLayout(getRelays.Relays);
-                } else {
-                    TextView tv = new TextView(getApplicationContext());
-                    tv.setText(R.string.relay_return_error);
-                    tv.setTextColor(Color.BLACK);
-                    tv.setGravity(Gravity.CENTER);
-                    tv.setTextSize(40);
-                    main.addView(tv);
-                }
+                createLayout(getRelays.Relays);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                TextView tv = new TextView(getApplicationContext());
-                tv.setText(error.getMessage());
-                tv.setTextColor(Color.BLACK);
-                main.addView(tv);
+                fileRetrievalError(error);
             }
         });
 
@@ -139,31 +150,52 @@ public class MainActivity extends Activity {
 
     public void createLayout(Relay[] relays) {
         int divide = 1;
-        for (int i = 0; i < relays.length; i += 2) {
-            LinearLayout ll = new LinearLayout(this);
-            ll.setOrientation(LinearLayout.HORIZONTAL);
-            ll.setLayoutParams(params);
-            ll.setGravity(LinearLayout.VERTICAL);
-            if (i == (relays.length - 1)) {
-                ll.addView(createButton(relays[i]));
-            } else {
-                for (int j = 0; j < 2; j++) {
-                    ll.addView(createButton(relays[i + j]));
+        if (relays != null && relays.length >= 1) {
+            for (int i = 0; i < relays.length; i += 2) {
+                LinearLayout ll = new LinearLayout(this);
+                ll.setOrientation(LinearLayout.HORIZONTAL);
+                ll.setLayoutParams(params);
+                ll.setGravity(LinearLayout.VERTICAL);
+                if (i == (relays.length - 1)) {
+                    ll.addView(createButton(relays[i]));
+                } else {
+                    for (int j = 0; j < 2; j++) {
+                        ll.addView(createButton(relays[i + j]));
+                    }
                 }
+                TranslateAnimation animation = new TranslateAnimation(0, 0, 1500, 0);
+                long time = AnimationUtils.currentAnimationTimeMillis() + (100 * i);
+                animation.setStartTime(time);
+                if (i < 30) {
+                    animation.setDuration((long) (1000 / divide));
+                    divide += .4;
+                } else {
+                    animation.setDuration(50);
+                }
+                ll.setAnimation(animation);
+                main.addView(ll);
             }
-            TranslateAnimation animation = new TranslateAnimation(0, 0, 1500, 0);
-            long time = AnimationUtils.currentAnimationTimeMillis() + (100 * i);
-            animation.setStartTime(time);
-            if (i<30) {
-                animation.setDuration((long) (1000 / divide));
-                divide+=.4;
-            }else {
-                animation.setDuration(50);
-            }
-            ll.setAnimation(animation);
-            main.addView(ll);
+        } else {
+
+            TextView tv = new TextView(getApplicationContext());
+            tv.setText(R.string.relay_return_error);
+            tv.setTextColor(Color.BLACK);
+            tv.setGravity(Gravity.CENTER);
+            tv.setTextSize(40);
+            main.addView(tv);
         }
+        progress.dismiss();
     }
+
+    public void fileRetrievalError(RetrofitError error){
+        progress.dismiss();
+        TextView tv = new TextView(getApplicationContext());
+        tv.setText(error.getMessage());
+        tv.setTextSize(40);
+        tv.setTextColor(Color.BLACK);
+        main.addView(tv);
+    }
+
 
     public Button createButton(Relay relay) {
         Button b = new Button(this);
@@ -172,6 +204,24 @@ public class MainActivity extends Activity {
         b.setText(relay.Description);
         b.setOnClickListener(new DoorButtonListener());
         return b;
+    }
+
+    public void openDoor(StandardResponse standardResponse){
+        boolean success = Boolean.parseBoolean(standardResponse.Success);
+        if (success) {
+
+            Toast toast = Toast.makeText(getApplicationContext(), R.string.door_open_success, Toast.LENGTH_SHORT);
+            toast.show();
+        } else {
+            String message = standardResponse.Message;
+            Toast.makeText(getApplicationContext(),
+                    R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG);
+        }
+    }
+
+    public void openDoorFailure(RetrofitError error){
+        Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public boolean checkFileExistence(String fileName) {
@@ -247,6 +297,9 @@ public class MainActivity extends Activity {
     private class DoorButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            progress.setTitle(R.string.progress_title_open);
+            progress.setMessage("");
+            progress.show();
             //Initialize
             SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
@@ -259,22 +312,12 @@ public class MainActivity extends Activity {
                 client.openDoor(door, new Callback<StandardResponse>() {
                     @Override
                     public void success(StandardResponse standardResponse, Response response) {
-                        boolean success = Boolean.parseBoolean(standardResponse.Success);
-                        if (success) {
-
-                            Toast toast = Toast.makeText(getApplicationContext(), R.string.door_open_success, Toast.LENGTH_SHORT);
-                            toast.show();
-                        } else {
-                            String message = standardResponse.Message;
-                            Toast.makeText(getApplicationContext(),
-                                    R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG);
-                        }
+                       openDoor(standardResponse);
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
-                        toast.show();
+                        openDoorFailure(error);
                     }
                 });
             } else {
