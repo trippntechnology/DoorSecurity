@@ -1,8 +1,10 @@
 package com.trippntechnology.doorsecurity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.wifi.WifiInfo;
@@ -250,6 +252,38 @@ public class MainActivity extends Activity {
         return bytes;
     }
 
+    public AlertDialog.Builder alertBuilder(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(R.string.alert_title);
+        alert.setMessage(R.string.alert_message);
+        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                deleteFiles();
+            }
+        });
+        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        return alert;
+    }
+
+    public void deleteFiles(){
+        File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
+        File file1 = getBaseContext().getFileStreamPath(IV_FILE);
+        File file2 = getBaseContext().getFileStreamPath(URL);
+        file.delete();
+        file1.delete();
+        file2.delete();
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
     public String getMacAddress() {
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
@@ -270,25 +304,10 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if (id == R.id.delete_registration) {
-            File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
-            File file1 = getBaseContext().getFileStreamPath(IV_FILE);
-            File file2 = getBaseContext().getFileStreamPath(URL);
-            file.delete();
-            file1.delete();
-            file2.delete();
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
+           AlertDialog alert = alertBuilder().create();
+            alert.show();
         }
 
         return super.onOptionsItemSelected(item);
