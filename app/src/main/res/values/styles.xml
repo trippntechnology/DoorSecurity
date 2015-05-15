@@ -15,7 +15,7 @@
 
     <style name="tnt_button" parent="android:Widget.Holo.Button">
         <item name="android:textColor">@color/md_black_1000</item>
-        <item name="android:background">@drawable/tnt_button</item>
+        <item name="android:background">@drawable/tnt_button_old</item>
         <item name="android:padding">0dp</item>
         <item name="android:minWidth">88dp</item>
         <item name="android:minHeight">36dp</item>
