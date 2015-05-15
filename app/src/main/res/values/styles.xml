@@ -1,8 +1,28 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:windowBackground">@color/md_grey_400</item>
+        <item name="android:actionBarStyle">@style/actionBarColor</item>
+        <item name="android:buttonStyle">@style/tnt_button</item>
+
+    </style>
+
+    <style name="actionBarColor" parent="android:Widget.Holo.ActionBar.Solid">
+        <item name="android:background">@color/md_green_500</item>
+    </style>
+
+    <style name="tnt_button" parent="android:Widget.Holo.Button">
+        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:background">@drawable/tnt_button</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:elevation">1dp</item>
+        <item name="android:translationZ">1dp</item>
+
     </style>
 
 </resources>

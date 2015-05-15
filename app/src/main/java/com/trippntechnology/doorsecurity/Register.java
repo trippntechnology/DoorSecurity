@@ -1,5 +1,6 @@
 package com.trippntechnology.doorsecurity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
@@ -27,7 +28,7 @@ import retrofit.client.OkClient;
 import retrofit.client.Response;
 
 
-public class Register extends AppCompatActivity {
+public class Register extends Activity {
 
     private static final String TAG = "KEY TAG";
     private static final String REGISTRATION_FILE = "RegistrationKey";

@@ -11,7 +11,7 @@
         android:id="@+id/tokenText"
         android:layout_marginTop="178dp"
         android:minWidth="150dp"
-        android:hint="Enter token"
+        android:hint="@string/enter_token_string"
         android:gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
@@ -19,7 +19,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="@string/register_string"
         android:id="@+id/registerButton"
         android:onClick="registerButton"
         android:nestedScrollingEnabled="false"

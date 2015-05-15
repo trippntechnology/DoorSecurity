@@ -1,5 +1,6 @@
 package com.trippntechnology.doorsecurity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -35,7 +36,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private static final String REGISTRATION_FILE = "RegistrationKey";
     private static final String IV_FILE = "RegistrationIV";
