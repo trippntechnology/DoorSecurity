@@ -18,4 +18,6 @@
     <string name="door_open_success">Door successfully unlocked</string>
     <string name="door_open_failure">Failed to unlock door</string>
     <string name="copyright">\u00A9 Tripp\'n Technology, LLC 2015</string>
+    <string name="register_string">Register</string>
+    <string name="enter_token_string">Enter token</string>
 </resources>
