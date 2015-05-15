@@ -13,7 +13,7 @@
         <item name="android:buttonStyle">@style/Button</item>
 
     </style>
-    
+
     <style name="edit_text" parent="android:Widget.Material.EditText">
         <item name="android:textColor">@color/md_black_1000</item>
     </style>
