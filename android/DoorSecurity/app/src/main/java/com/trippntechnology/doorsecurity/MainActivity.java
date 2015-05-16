@@ -211,7 +211,6 @@ public class MainActivity extends Activity {
     public void openDoor(StandardResponse standardResponse){
         boolean success = Boolean.parseBoolean(standardResponse.Success);
         if (success) {
-
             Toast toast = Toast.makeText(getApplicationContext(), R.string.door_open_success, Toast.LENGTH_SHORT);
             toast.show();
         } else {
@@ -219,11 +218,13 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(),
                     R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG);
         }
+        progress.dismiss();
     }
 
     public void openDoorFailure(RetrofitError error){
         Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
         toast.show();
+        progress.dismiss();
     }
 
     public boolean checkFileExistence(String fileName) {
