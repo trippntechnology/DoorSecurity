@@ -8,11 +8,4 @@ public class KeyReturn {
     String Success;
     String Message;
 
-    public KeyReturn(String IV, String key, String message, String success) {
-        this.IV = IV;
-        Key = key;
-        Message = message;
-        Success = success;
-    }
-    public KeyReturn(){}
 }

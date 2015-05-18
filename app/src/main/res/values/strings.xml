@@ -29,4 +29,7 @@
         This cannot be undone</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="retry_message">Would you like to try to reconnect?</string>
+    <string name="unknown_error">An unknown error has occurred.
+        Please reload the app and try again</string>
 </resources>
