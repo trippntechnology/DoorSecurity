@@ -60,7 +60,11 @@ public class MainActivity extends Activity {
     private LinearLayout.LayoutParams buttonParams;
     private LinearLayout.LayoutParams params;
     private ProgressDialog progress;
+    AlertDialog alertDialog;
 
+
+
+    //Activity Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +119,8 @@ public class MainActivity extends Activity {
             progress = new ProgressDialog(this);
             progress.setTitle(R.string.progress_title_main);
             progress.setMessage("Getting available doors");
+            progress.setCanceledOnTouchOutside(false);
+            progress.setCancelable(false);
         } else {
             Intent i = new Intent(this, Register.class);
             startActivity(i);
@@ -127,6 +133,20 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        getDoorsRequestCall();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        main.removeAllViews();
+        alertDialog.dismiss();
+    }
+
+
+
+    //Create the Layout
+    public void getDoorsRequestCall() {
         progress.show();
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
@@ -141,13 +161,6 @@ public class MainActivity extends Activity {
                 fileRetrievalError(error);
             }
         });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        main.removeAllViews();
     }
 
     public void createLayout(Relay[] relays) {
@@ -181,7 +194,7 @@ public class MainActivity extends Activity {
 
             TextView tv = new TextView(getApplicationContext());
             tv.setText(R.string.relay_return_error);
-            tv.setTextColor(Color.BLACK);
+            tv.setTextColor(Color.RED);
             tv.setGravity(Gravity.CENTER);
             tv.setTextSize(40);
             main.addView(tv);
@@ -189,26 +202,20 @@ public class MainActivity extends Activity {
         progress.dismiss();
     }
 
-    public void fileRetrievalError(RetrofitError error){
-        progress.dismiss();
-        TextView tv = new TextView(getApplicationContext());
-        tv.setText(error.getMessage());
-        tv.setTextSize(40);
-        tv.setTextColor(Color.BLACK);
-        main.addView(tv);
-    }
-
-
     public Button createButton(Relay relay) {
         Button b = new Button(this);
         b.setLayoutParams(buttonParams);
         b.setId(relay.ID);
         b.setText(relay.Description);
         b.setOnClickListener(new DoorButtonListener());
+        b.setTextSize(25);
         return b;
     }
 
-    public void openDoor(StandardResponse standardResponse){
+
+
+    //Open Door
+    public void openDoor(StandardResponse standardResponse) {
         boolean success = Boolean.parseBoolean(standardResponse.Success);
         if (success) {
             Toast toast = Toast.makeText(getApplicationContext(), R.string.door_open_success, Toast.LENGTH_SHORT);
@@ -221,12 +228,52 @@ public class MainActivity extends Activity {
         progress.dismiss();
     }
 
-    public void openDoorFailure(RetrofitError error){
+
+
+    //Error handling
+    public void fileRetrievalError(RetrofitError error) {
+        if (error.getMessage().contains("failed to connect")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.connection_error);
+            builder.setMessage(R.string.retry_message);
+            builder.setCancelable(false);
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getDoorsRequestCall();
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please reload app to try again", Toast.LENGTH_LONG);
+                    toast.show();
+                    dialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
+            alertDialog.show();
+        } else {
+            TextView tv = new TextView(this);
+            tv.setText(R.string.unknown_error);
+            tv.setTextSize(40);
+            tv.setTextColor(Color.RED);
+            main.addView(tv);
+        }
+        progress.dismiss();
+
+    }
+
+    public void openDoorFailure(RetrofitError error) {
         Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
         toast.show();
         progress.dismiss();
     }
 
+
+
+    //Builders and File readers
     public boolean checkFileExistence(String fileName) {
         File file = getBaseContext().getFileStreamPath(fileName);
         return file.exists();
@@ -253,7 +300,7 @@ public class MainActivity extends Activity {
         return bytes;
     }
 
-    public AlertDialog.Builder alertBuilder(){
+    public AlertDialog.Builder alertBuilder() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle(R.string.alert_title);
         alert.setMessage(R.string.alert_message);
@@ -273,7 +320,10 @@ public class MainActivity extends Activity {
         return alert;
     }
 
-    public void deleteFiles(){
+
+
+    //Delete Files
+    public void deleteFiles() {
         File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
         File file1 = getBaseContext().getFileStreamPath(IV_FILE);
         File file2 = getBaseContext().getFileStreamPath(URL);
@@ -285,6 +335,9 @@ public class MainActivity extends Activity {
         finish();
     }
 
+
+
+    //Info Getters
     public String getMacAddress() {
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo wInfo = wifiManager.getConnectionInfo();
@@ -296,6 +349,9 @@ public class MainActivity extends Activity {
         return tMgr.getLine1Number();
     }
 
+
+
+    //Action Bar
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -307,13 +363,16 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.delete_registration) {
-           AlertDialog alert = alertBuilder().create();
+            AlertDialog alert = alertBuilder().create();
             alert.show();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
+
+    //On click Listener
     private class DoorButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -332,7 +391,7 @@ public class MainActivity extends Activity {
                 client.openDoor(door, new Callback<StandardResponse>() {
                     @Override
                     public void success(StandardResponse standardResponse, Response response) {
-                       openDoor(standardResponse);
+                        openDoor(standardResponse);
                     }
 
                     @Override
@@ -346,6 +405,5 @@ public class MainActivity extends Activity {
             }
         }
     }
-
 
 }

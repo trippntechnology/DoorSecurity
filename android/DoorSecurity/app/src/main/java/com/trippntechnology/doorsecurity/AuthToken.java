@@ -8,7 +8,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class AuthToken extends Request {
+public class AuthToken {
 
     public byte[] encrypt(SecretKeySpec keySpec, IvParameterSpec parameterSpec,String macAddress){
         byte[] encrypted = null;
