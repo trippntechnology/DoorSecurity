@@ -4,7 +4,7 @@
         <!-- Customize your theme here. -->
         <item name="android:textColorPrimary">@color/md_white_1000</item>
         <item name="android:textColorHint">@color/md_grey_700</item>
-        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColor">@color/md_grey_900</item>
         <item name="android:colorPrimary">@color/md_green_500</item>
         <item name="android:colorPrimaryDark">@color/md_green_600</item>
         <item name="android:windowBackground">@color/md_grey_400</item>
@@ -14,7 +14,7 @@
     </style>
 
     <style name="edit_text" parent="android:Widget.Material.EditText">
-        <item name="android:textColor">@color/md_black_1000</item>
+        <item name="android:textColor">@color/md_grey_900</item>
     </style>
 
     <style name="tnt_button_v20" parent="android:Widget.Material.Button">

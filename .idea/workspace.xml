@@ -36,18 +36,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="4d419559-bbab-499f-9994-7362c2e1aa96" name="Default" comment="">
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\DAL.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\KeyReturnRequest.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\OpenDoor.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Android Projects\DoorSecurity\app\src\main\java\com\trippntechnology\doorsecurity\Request.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/AuthToken.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/AuthToken.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/GetRelays.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/GetRelays.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/KeyReturn.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/KeyReturn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Relay.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Relay.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/registration.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/registration.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -110,48 +99,12 @@
         </entry>
       </file>
       <file leaf-file-name="styles.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61049724">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.42265195">
+              <caret line="9" column="78" selection-start-line="9" selection-start-column="78" selection-end-line="9" selection-end-column="78" />
               <folding />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tnt__button_v20.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/tnt__button_v20.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activity_main.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-          <provider editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="registration.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/registration.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="19.0">
-              <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="android-designer">
-            <state />
           </provider>
         </entry>
       </file>
@@ -1500,7 +1453,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/Register.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/tnt_edit_text_cursor.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/tnt_edit_text.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/menu_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/GetRelays.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/KeyReturn.java" />
@@ -1511,6 +1463,7 @@
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
       </list>
     </option>
   </component>
@@ -2335,7 +2288,13 @@
       <option name="project" value="LOCAL" />
       <updated>1431753241536</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Added new alerts">
+      <created>1431915607981</created>
+      <option name="number" value="00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1431915607981</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -2402,7 +2361,8 @@
     <MESSAGE value="Added deletion confirmation" />
     <MESSAGE value="Changed icon colors" />
     <MESSAGE value="Solid Version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Solid Version" />
+    <MESSAGE value="Added new alerts" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new alerts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2601,13 +2561,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08765653">
-          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable-hdpi/tnt_logo.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -2725,14 +2678,6 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/tnt__button_v20.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2742,6 +2687,22 @@
       </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.046961326">
+          <caret line="16" column="57" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/tnt__button_v20.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42265195">
+          <caret line="9" column="9" selection-start-line="9" selection-start-column="9" selection-end-line="9" selection-end-column="9" />
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/trippntechnology/doorsecurity/MainActivity.java">
@@ -2774,10 +2735,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/styles.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61049724">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.42265195">
+          <caret line="9" column="78" selection-start-line="9" selection-start-column="78" selection-end-line="9" selection-end-column="78" />
           <folding />
         </state>
       </provider>
