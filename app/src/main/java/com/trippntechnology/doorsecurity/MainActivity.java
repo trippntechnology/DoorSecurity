@@ -60,8 +60,8 @@ public class MainActivity extends Activity {
     private LinearLayout.LayoutParams buttonParams;
     private LinearLayout.LayoutParams params;
     private ProgressDialog progress;
-    AlertDialog alertDialog;
-
+    private AlertDialog alertDialog;
+    private AlertDialog.Builder builder;
 
 
     //Activity Methods
@@ -115,12 +115,37 @@ public class MainActivity extends Activity {
             buttonParams.setMargins(horizontalMargins, verticalMargins,
                     horizontalMargins, verticalMargins);
 
-            //Progress dialog
+
+
+            //Progress Dialog
             progress = new ProgressDialog(this);
-            progress.setTitle(R.string.progress_title_main);
-            progress.setMessage("Getting available doors");
             progress.setCanceledOnTouchOutside(false);
             progress.setCancelable(false);
+
+
+
+            //Alert Dialog
+            builder = new AlertDialog.Builder(this);
+
+            builder.setCancelable(false);
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    getDoorsRequestCall();
+                    dialog.dismiss();
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please reload app to try again", Toast.LENGTH_LONG);
+                    toast.show();
+                    dialog.dismiss();
+                }
+            });
+            alertDialog = builder.create();
+
+
         } else {
             Intent i = new Intent(this, Register.class);
             startActivity(i);
@@ -132,22 +157,28 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onStart() {
+        progress.dismiss();
         super.onStart();
         getDoorsRequestCall();
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         main.removeAllViews();
+        progress.dismiss();
         alertDialog.dismiss();
-    }
+        super.onPause();
 
+
+    }
 
 
     //Create the Layout
     public void getDoorsRequestCall() {
+        progress.setTitle(R.string.progress_title_main);
+        progress.setMessage("Getting available doors");
         progress.show();
+
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
         client.getDoors(door, new Callback<GetRelays>() {
@@ -208,10 +239,9 @@ public class MainActivity extends Activity {
         b.setId(relay.ID);
         b.setText(relay.Description);
         b.setOnClickListener(new DoorButtonListener());
-        b.setTextSize(25);
+        b.setTextSize(15);
         return b;
     }
-
 
 
     //Open Door
@@ -229,31 +259,11 @@ public class MainActivity extends Activity {
     }
 
 
-
     //Error handling
     public void fileRetrievalError(RetrofitError error) {
         if (error.getMessage().contains("failed to connect")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.connection_error);
             builder.setMessage(R.string.retry_message);
-            builder.setCancelable(false);
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    getDoorsRequestCall();
-                    dialog.dismiss();
-                }
-            });
-            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please reload app to try again", Toast.LENGTH_LONG);
-                    toast.show();
-                    dialog.dismiss();
-                }
-            });
-            alertDialog = builder.create();
-            alertDialog.show();
         } else {
             TextView tv = new TextView(this);
             tv.setText(R.string.unknown_error);
@@ -261,6 +271,9 @@ public class MainActivity extends Activity {
             tv.setTextColor(Color.RED);
             main.addView(tv);
         }
+        alertDialog.dismiss();
+        alertDialog = builder.create();
+        alertDialog.show();
         progress.dismiss();
 
     }
@@ -270,7 +283,6 @@ public class MainActivity extends Activity {
         toast.show();
         progress.dismiss();
     }
-
 
 
     //Builders and File readers
@@ -321,7 +333,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     //Delete Files
     public void deleteFiles() {
         File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
@@ -336,7 +347,6 @@ public class MainActivity extends Activity {
     }
 
 
-
     //Info Getters
     public String getMacAddress() {
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
@@ -348,7 +358,6 @@ public class MainActivity extends Activity {
         TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         return tMgr.getLine1Number();
     }
-
 
 
     //Action Bar
@@ -369,7 +378,6 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     //On click Listener

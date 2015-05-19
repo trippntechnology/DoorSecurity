@@ -35,7 +35,6 @@ import retrofit.client.Response;
 
 public class Register extends Activity {
 
-    private static final String TAG = "KEY TAG";
     private static final String REGISTRATION_FILE = "RegistrationKey";
     private static final String IV_FILE = "RegistrationIV";
     private static final String URL = "Url";
