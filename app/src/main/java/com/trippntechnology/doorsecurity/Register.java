@@ -14,7 +14,11 @@ import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,9 +45,11 @@ public class Register extends Activity {
 
     private String url;
     private EditText token, urlBox;
+    private Button regButton;
     private ProgressDialog progress;
     private FileOutputStream fos;
     private RegistrationObject RO = new RegistrationObject();
+    private Animation fade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +57,21 @@ public class Register extends Activity {
         setContentView(R.layout.registration);
         token = (EditText) findViewById(R.id.tokenText);
         urlBox = (EditText) findViewById(R.id.urlText);
+        regButton = (Button) findViewById(R.id.registerButton);
         progress = new ProgressDialog(this);
         progress.setTitle(R.string.progress_title_register);
         progress.setMessage("Retrieving registration information");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fade = new AlphaAnimation(0,1);
+        fade.setDuration(1500);
+        fade.setStartTime(AnimationUtils.currentAnimationTimeMillis()+250);
+        token.setAnimation(fade);
+        urlBox.setAnimation(fade);
+        regButton.setAnimation(fade);
     }
 
     public void registerButton(View view) {
