@@ -16,7 +16,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,9 +49,7 @@ public class Register extends Activity {
     private EditText token, urlBox;
     private Button regButton;
     private ProgressDialog progress;
-    private FileOutputStream fos;
     private RegistrationObject RO = new RegistrationObject();
-    private Animation fade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,12 +66,18 @@ public class Register extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        fade = new AlphaAnimation(0,1);
+        Animation fade = new AlphaAnimation(0, 1);
         fade.setDuration(1500);
-        fade.setStartTime(AnimationUtils.currentAnimationTimeMillis()+250);
-        token.setAnimation(fade);
-        urlBox.setAnimation(fade);
-        regButton.setAnimation(fade);
+        fade.setStartTime(AnimationUtils.currentAnimationTimeMillis() + 250);
+        Animation slide = new TranslateAnimation(0, 0, 100, 0);
+        slide.setDuration(750);
+        slide.setStartTime(AnimationUtils.currentAnimationTimeMillis() + 250);
+        AnimationSet animate = new AnimationSet(false);
+        animate.addAnimation(fade);
+        animate.addAnimation(slide);
+        urlBox.setAnimation(animate);
+        token.setAnimation(animate);
+        regButton.setAnimation(animate);
     }
 
     public void registerButton(View view) {
@@ -113,7 +119,7 @@ public class Register extends Activity {
             byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
             byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
             try {
-                fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
+                FileOutputStream fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
                 fos.write(key);
                 fos = openFileOutput(IV_FILE, MODE_PRIVATE);
                 fos.write(IV);
