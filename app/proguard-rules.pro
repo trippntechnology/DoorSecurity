@@ -14,4 +14,8 @@
 # class:
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
+-dontwarn okio.Okio**
+-dontwarn okio.DeflaterSink**
+-dontwarn com.squareup.okhttp.internal.huc**
+-dontwarn retrofit**
 #}
