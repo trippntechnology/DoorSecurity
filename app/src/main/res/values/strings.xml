@@ -31,4 +31,5 @@
     <string name="retry_message">Would you like to try to reconnect?</string>
     <string name="unknown_error">An unknown error has occurred.
         Please reload the app and try again</string>
+    <string name="url">http://10.0.0.63:12345</string>
 </resources>
