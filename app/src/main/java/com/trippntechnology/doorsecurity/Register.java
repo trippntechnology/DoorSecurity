@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
 
@@ -44,12 +45,15 @@ public class Register extends Activity {
     private static final String REGISTRATION_FILE = "RegistrationKey";
     private static final String IV_FILE = "RegistrationIV";
     private static final String URL = "Url";
+    private static final String FILES = "RegistrationFiles";
 
     private String url;
     private EditText token, urlBox;
     private Button regButton;
     private ProgressDialog progress;
     private RegistrationObject RO = new RegistrationObject();
+    private SavedObjects files = new SavedObjects();
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,13 +122,13 @@ public class Register extends Activity {
         if (success) {
             byte[] key = Base64.decode(keyReturn.Key, Base64.DEFAULT);
             byte[] IV = Base64.decode(keyReturn.IV, Base64.DEFAULT);
+            files.key = key;
+            files.iv = IV;
+            files.URL = url;
+            String json = gson.toJson(files);
             try {
-                FileOutputStream fos = openFileOutput(REGISTRATION_FILE, MODE_PRIVATE);
-                fos.write(key);
-                fos = openFileOutput(IV_FILE, MODE_PRIVATE);
-                fos.write(IV);
-                fos = openFileOutput(URL, MODE_PRIVATE);
-                fos.write(url.getBytes());
+                FileOutputStream fos = openFileOutput(FILES,MODE_PRIVATE);
+                fos.write(json.getBytes());
                 fos.close();
                 progress.dismiss();
                 Toast toast = Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT);
@@ -140,7 +144,7 @@ public class Register extends Activity {
             }
         } else {
             progress.dismiss();
-            if (keyReturn.Message == null || Objects.equals(keyReturn.Message, "")) {
+            if (keyReturn.Message == null || keyReturn.Message.contains("")) {
                 Toast toast = Toast.makeText(getApplicationContext(), R.string.return_key_error, Toast.LENGTH_SHORT);
                 toast.show();
             } else {

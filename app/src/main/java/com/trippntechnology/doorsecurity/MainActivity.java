@@ -25,10 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -45,15 +48,16 @@ import retrofit.client.Response;
 
 public class MainActivity extends Activity {
 
-    private static final String REGISTRATION_FILE = "RegistrationKey";
-    private static final String IV_FILE = "RegistrationIV";
-    private static final String URL = "Url";
+
+    private static final String FILES = "RegistrationFiles";
     private byte[] key;
     private byte[] iv;
     private byte[] encrypted;
     private Interface client;
     private DoorObject door = new DoorObject();
     private AuthToken authToken = new AuthToken();
+    private SavedObjects files = new SavedObjects();
+    private Gson gson = new Gson();
     private SecretKeySpec keySpec;
     private IvParameterSpec ivSpec;
     private LinearLayout main;
@@ -62,22 +66,24 @@ public class MainActivity extends Activity {
     private ProgressDialog progress;
     private AlertDialog alertDialog;
     private AlertDialog.Builder builder;
+    private boolean hasRelays;
 
 
     //Activity Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (checkFileExistence(REGISTRATION_FILE) || checkFileExistence(IV_FILE)) {
+        if (checkFileExistence(FILES)) {
             setContentView(R.layout.activity_main);
 
             //Get layout
             main = (LinearLayout) findViewById(R.id.layoutMain);
 
             //Get files
-            key = readFile(REGISTRATION_FILE);
-            iv = readFile(IV_FILE);
-            String url = new String(readFile(URL));
+            files = jsonToObject(readFile(FILES));
+            key = files.key;
+            iv = files.key;
+            String url = files.URL;
 
             //Generate encryption keys
             keySpec = new SecretKeySpec(key, "AES");
@@ -116,12 +122,10 @@ public class MainActivity extends Activity {
                     horizontalMargins, verticalMargins);
 
 
-
             //Progress Dialog
             progress = new ProgressDialog(this);
             progress.setCanceledOnTouchOutside(false);
             progress.setCancelable(false);
-
 
 
             //Alert Dialog
@@ -151,14 +155,16 @@ public class MainActivity extends Activity {
             startActivity(i);
             finish();
         }
-
-
     }
 
     @Override
     protected void onStart() {
         progress.dismiss();
         super.onStart();
+        if (files.relays != null) {
+            createLayout(files.relays);
+            hasRelays = true;
+        }
         getDoorsRequestCall();
     }
 
@@ -177,14 +183,20 @@ public class MainActivity extends Activity {
     public void getDoorsRequestCall() {
         progress.setTitle(R.string.progress_title_main);
         progress.setMessage("Getting available doors");
-        progress.show();
-
+        if (!hasRelays) {
+            progress.show();
+        }
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
+        final boolean finalHasRelays = hasRelays;
         client.getDoors(door, new Callback<GetRelays>() {
             @Override
             public void success(GetRelays getRelays, Response response) {
-                createLayout(getRelays.Relays);
+                if (finalHasRelays) {
+                    newDoors(getRelays.Relays);
+                } else {
+                    createLayout(getRelays.Relays);
+                }
             }
 
             @Override
@@ -192,6 +204,35 @@ public class MainActivity extends Activity {
                 fileRetrievalError(error);
             }
         });
+    }
+
+    public void newDoors(final Relay[] relays) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(R.string.newDoorsTitle);
+        alert.setMessage(R.string.newDoorsMessage);
+        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                createLayout(relays);
+            }
+        });
+        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        files.relays = relays;
+        String json = gson.toJson(files);
+        try {
+            FileOutputStream fos = openFileOutput(FILES, MODE_PRIVATE);
+            fos.write(json.getBytes());
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void createLayout(Relay[] relays) {
@@ -253,7 +294,8 @@ public class MainActivity extends Activity {
         } else {
             String message = standardResponse.Message;
             Toast.makeText(getApplicationContext(),
-                    R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG);
+                    R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG).show();
+
         }
         progress.dismiss();
     }
@@ -333,14 +375,16 @@ public class MainActivity extends Activity {
     }
 
 
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+    }
+
     //Delete Files
     public void deleteFiles() {
-        File file = getBaseContext().getFileStreamPath(REGISTRATION_FILE);
-        File file1 = getBaseContext().getFileStreamPath(IV_FILE);
-        File file2 = getBaseContext().getFileStreamPath(URL);
+        File file = getBaseContext().getFileStreamPath(FILES);
         file.delete();
-        file1.delete();
-        file2.delete();
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
@@ -357,6 +401,11 @@ public class MainActivity extends Activity {
     public String getPhoneNumber() {
         TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         return tMgr.getLine1Number();
+    }
+
+    public SavedObjects jsonToObject(byte[] data) {
+        String jsonString = new String(data);
+        return gson.fromJson(jsonString, SavedObjects.class);
     }
 
 
