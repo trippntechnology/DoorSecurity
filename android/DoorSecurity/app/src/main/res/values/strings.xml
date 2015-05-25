@@ -32,4 +32,6 @@
     <string name="unknown_error">An unknown error has occurred.
         Please reload the app and try again</string>
     <string name="url">http://10.0.0.63:12345</string>
+    <string name="newDoorsTitle">New doors</string>
+    <string name="newDoorsMessage">There are new doors available. Would you like to display them now?</string>
 </resources>
