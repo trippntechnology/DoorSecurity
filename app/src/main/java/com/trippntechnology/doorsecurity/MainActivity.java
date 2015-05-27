@@ -297,7 +297,6 @@ public class MainActivity extends Activity {
                     R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG).show();
 
         }
-        progress.dismiss();
     }
 
 
@@ -323,7 +322,6 @@ public class MainActivity extends Activity {
     public void openDoorFailure(RetrofitError error) {
         Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
         toast.show();
-        progress.dismiss();
     }
 
 
@@ -433,9 +431,6 @@ public class MainActivity extends Activity {
     private class DoorButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            progress.setTitle(R.string.progress_title_open);
-            progress.setMessage("");
-            progress.show();
             //Initialize
             SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
