@@ -22,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public class MainActivity extends Activity {
     private boolean hasRelays;
 
 
+
     //Activity Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class MainActivity extends Activity {
             //Get files
             files = jsonToObject(readFile(FILES));
             key = files.key;
-            iv = files.key;
+            iv = files.iv;
             String url = files.URL;
 
             //Generate encryption keys
@@ -187,23 +189,30 @@ public class MainActivity extends Activity {
             progress.show();
         }
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
-        door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-        final boolean finalHasRelays = hasRelays;
-        client.getDoors(door, new Callback<GetRelays>() {
-            @Override
-            public void success(GetRelays getRelays, Response response) {
-                if (finalHasRelays) {
-                    newDoors(getRelays.Relays);
-                } else {
-                    createLayout(getRelays.Relays);
+        if (encrypted == null){
+            Toast toast = Toast.makeText(this,"Encryption Error",Toast.LENGTH_SHORT);
+            toast.show();
+            progress.dismiss();
+        }
+        else {
+            door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
+            final boolean finalHasRelays = hasRelays;
+            client.getDoors(door, new Callback<GetRelays>() {
+                @Override
+                public void success(GetRelays getRelays, Response response) {
+                    if (finalHasRelays) {
+                        newDoors(getRelays.Relays);
+                    } else {
+                        createLayout(getRelays.Relays);
+                    }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                fileRetrievalError(error);
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    fileRetrievalError(error);
+                }
+            });
+        }
     }
 
     public void newDoors(final Relay[] relays) {
@@ -293,7 +302,7 @@ public class MainActivity extends Activity {
             toast.show();
         } else {
             String message = standardResponse.Message;
-            Toast.makeText(getApplicationContext(),
+            Toast.makeText(getApplicationContext(),"Server response"+
                     R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG).show();
 
         }
@@ -320,7 +329,7 @@ public class MainActivity extends Activity {
     }
 
     public void openDoorFailure(RetrofitError error) {
-        Toast toast = Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), "Retrotfit\n"+error.getMessage(), Toast.LENGTH_LONG);
         toast.show();
     }
 

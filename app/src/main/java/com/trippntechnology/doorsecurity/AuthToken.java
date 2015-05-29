@@ -17,7 +17,9 @@ public class AuthToken {
         try {
             Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
             c.init(Cipher.ENCRYPT_MODE, keySpec, parameterSpec);
+            c.doFinal(mac.getBytes());
             encrypted = c.doFinal(mac.getBytes());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
