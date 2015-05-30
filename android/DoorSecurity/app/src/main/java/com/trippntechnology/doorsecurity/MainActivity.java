@@ -54,6 +54,7 @@ public class MainActivity extends Activity {
     private byte[] key;
     private byte[] iv;
     private byte[] encrypted;
+    private String url;
     private Interface client;
     private DoorObject door = new DoorObject();
     private AuthToken authToken = new AuthToken();
@@ -71,24 +72,22 @@ public class MainActivity extends Activity {
     private boolean hasRelays;
 
 
-
-
     //Activity Methods
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (checkFileExistence(FILES)) {
+        if (fileGetter.checkFileExistence(FILES, getBaseContext())) {
             setContentView(R.layout.activity_main);
 
             //Get layout
             main = (LinearLayout) findViewById(R.id.layoutMain);
 
             //Get files
-            files = fileGetter.getSavedObjects(FILES,this);
+            files = fileGetter.getSavedObjects(FILES, this);
 //            files = jsonToObject(readFile(FILES));
             key = files.key;
             iv = files.iv;
-            String url = files.URL;
+            url = files.URL;
 
             //Generate encryption keys
             keySpec = new SecretKeySpec(key, "AES");
@@ -192,12 +191,11 @@ public class MainActivity extends Activity {
             progress.show();
         }
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
-        if (encrypted == null){
-            Toast toast = Toast.makeText(this,"Encryption Error",Toast.LENGTH_SHORT);
+        if (encrypted == null) {
+            Toast toast = Toast.makeText(this, "Encryption Error", Toast.LENGTH_SHORT);
             toast.show();
             progress.dismiss();
-        }
-        else {
+        } else {
             door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
             final boolean finalHasRelays = hasRelays;
             client.getDoors(door, new Callback<GetRelays>() {
@@ -236,8 +234,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        files.relays = relays;
-        String json = gson.toJson(files);
+        SavedObjects newFile = new SavedObjects(iv,key,relays,url);
+        String json = gson.toJson(newFile);
         try {
             FileOutputStream fos = openFileOutput(FILES, MODE_PRIVATE);
             fos.write(json.getBytes());
@@ -305,7 +303,7 @@ public class MainActivity extends Activity {
             toast.show();
         } else {
             String message = standardResponse.Message;
-            Toast.makeText(getApplicationContext(),"Server response"+
+            Toast.makeText(getApplicationContext(), "Server response" +
                     R.string.door_open_failure + "\n" + message, Toast.LENGTH_LONG).show();
 
         }
@@ -332,16 +330,16 @@ public class MainActivity extends Activity {
     }
 
     public void openDoorFailure(RetrofitError error) {
-        Toast toast = Toast.makeText(getApplicationContext(), "Retrotfit\n"+error.getMessage(), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), "Retrotfit\n" + error.getMessage(), Toast.LENGTH_LONG);
         toast.show();
     }
 
 
     //Builders and File readers
-    public boolean checkFileExistence(String fileName) {
-        File file = getBaseContext().getFileStreamPath(fileName);
-        return file.exists();
-    }
+//    public boolean checkFileExistence(String fileName) {
+//        File file = getBaseContext().getFileStreamPath(fileName);
+//        return file.exists();
+//    }
 
 
     public byte[] readFile(String filename) {

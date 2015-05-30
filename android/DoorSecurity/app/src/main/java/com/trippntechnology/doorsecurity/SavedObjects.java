@@ -5,7 +5,7 @@ public class SavedObjects {
     byte[] key;
     byte[] iv;
     String URL;
-    Relay[] relays;
+    Relay[] relays = null;
 
     public SavedObjects(byte[] iv, byte[] key, Relay[] relays, String URL) {
         this.iv = iv;
@@ -14,4 +14,5 @@ public class SavedObjects {
         this.URL = URL;
     }
     public SavedObjects(){}
+
 }

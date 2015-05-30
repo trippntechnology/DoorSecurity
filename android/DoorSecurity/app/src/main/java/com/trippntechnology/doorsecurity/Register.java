@@ -108,7 +108,7 @@ public class Register extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
-                registrationError();
+                registrationError(error);
             }
         });
         InputMethodManager imm = (InputMethodManager) getSystemService(
@@ -154,10 +154,15 @@ public class Register extends Activity {
         }
     }
 
-    public void registrationError() {
+    public void registrationError(RetrofitError error) {
         progress.dismiss();
-        Toast toast = Toast.makeText(getApplicationContext(), R.string.connection_error, Toast.LENGTH_LONG);
-        toast.show();
+        if (error.getMessage().contains("failed to connect")) {
+            Toast toast = Toast.makeText(this, R.string.connection_error, Toast.LENGTH_LONG);
+            toast.show();
+        }else {
+            Toast toast = Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
 
