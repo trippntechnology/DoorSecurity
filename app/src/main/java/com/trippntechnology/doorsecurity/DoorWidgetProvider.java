@@ -7,9 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.RemoteViews;
-import android.widget.Toast;
+import android.widget.RemoteViewsService;
 
 public class DoorWidgetProvider extends AppWidgetProvider {
+    private final static String DOOR = "OpenDoor";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -30,7 +31,6 @@ public class DoorWidgetProvider extends AppWidgetProvider {
         //which layout to show on widget
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),
                 R.layout.widget);
-
         //RemoteViews Service needed to provide adapter for ListView
         Intent svcIntent = new Intent(context, RelayWidgetService.class);
         //passing app widget id to that RemoteViews Service
@@ -46,4 +46,9 @@ public class DoorWidgetProvider extends AppWidgetProvider {
         return remoteViews;
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
+    }
 }

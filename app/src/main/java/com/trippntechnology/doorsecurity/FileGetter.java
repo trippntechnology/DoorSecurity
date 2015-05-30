@@ -1,10 +1,9 @@
 package com.trippntechnology.doorsecurity;
 
 import android.content.Context;
-
 import com.google.gson.Gson;
-
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,6 +15,10 @@ public class FileGetter {
 
     public SavedObjects getSavedObjects(String filename,Context context){
         return jsonToObject(readFile(filename,context));
+    }
+    public boolean checkFileExistence(String fileName,Context context) {
+        File file = context.getFileStreamPath(fileName);
+        return file.exists();
     }
 
     private byte[] readFile(String filename,Context context) {

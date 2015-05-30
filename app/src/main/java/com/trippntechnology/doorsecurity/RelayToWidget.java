@@ -8,6 +8,7 @@ import android.widget.RemoteViewsService;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -18,22 +19,26 @@ public class RelayToWidget implements RemoteViewsService.RemoteViewsFactory {
     private int appWidgetId;
     private static final String FILES = "RegistrationFiles";
 
-    public RelayToWidget (Context context, Intent intent){
+
+    public RelayToWidget(Context context, Intent intent) {
         this.context = context;
-//        FileGetter fileGetter = new FileGetter();
-//        SavedObjects savedObjects = fileGetter.getSavedObjects(FILES, context);
-//        relays = savedObjects.relays;
+        FileGetter fileGetter = new FileGetter();
+        if (fileGetter.checkFileExistence(FILES, context)) {
+            SavedObjects savedObjects = fileGetter.getSavedObjects(FILES, context);
+            relays = savedObjects.relays;
+        }
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
 
-        populateListItem();
+//        populateListItem();
     }
 
     private void populateListItem() {
-        for (int i = 0;i<10;i++){
-            Relay relay = new Relay("relay"+i,i);
+        for (int i = 0; i < 10; i++) {
+            Relay relay = new Relay("relay" + i, i);
             test.add(relay);
         }
+
 
 //        for (int i = 0; i < 10; i++) {
 //            ListItem listItem = new ListItem();
@@ -57,17 +62,19 @@ public class RelayToWidget implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public RemoteViews getViewAt(int position) {
-        final RemoteViews remoteView = new RemoteViews(
+        final RemoteViews textView = new RemoteViews(
                 context.getPackageName(), R.layout.widget_list_layout);
-        Relay relay = test.get(position);
-//        Relay relay = relays[position];
-        remoteView.setTextViewText(R.id.widgetText,relay.Description);
-        remoteView.setContentDescription(R.id.widgetText, Integer.toString(relay.ID));
+//        Relay relay = test.get(position);
+        if (relays.length > 0) {
+            Relay relay = relays[position];
+            textView.setTextViewText(R.id.widgetText, relay.Description);
+            textView.setContentDescription(R.id.widgetText, Integer.toString(relay.ID));
+        }
 //        ListItem listItem = listItemList.get(position);
-//        remoteView.setTextViewText(R.id.heading, listItem.heading);
-//        remoteView.setTextViewText(R.id.content, listItem.content);
+//        textView.setTextViewText(R.id.heading, listItem.heading);
+//        textView.setTextViewText(R.id.content, listItem.content);
 
-        return remoteView;
+        return textView;
     }
 
     @Override
