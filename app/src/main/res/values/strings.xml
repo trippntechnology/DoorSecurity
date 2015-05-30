@@ -34,4 +34,6 @@
     <string name="url">http://10.0.0.63:12345</string>
     <string name="newDoorsTitle">New doors</string>
     <string name="newDoorsMessage">There are new doors available. Would you like to display them now?</string>
+    <string name="no_doors_for_widget">Please register.
+    If you have registered then there are no available doors please open the app.</string>
 </resources>
