@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
     private DoorObject door = new DoorObject();
     private AuthToken authToken = new AuthToken();
     private SavedObjects files = new SavedObjects();
+    private FileGetter fileGetter = new FileGetter();
     private Gson gson = new Gson();
     private SecretKeySpec keySpec;
     private IvParameterSpec ivSpec;
@@ -68,6 +69,7 @@ public class MainActivity extends Activity {
     private AlertDialog alertDialog;
     private AlertDialog.Builder builder;
     private boolean hasRelays;
+
 
 
 
@@ -82,7 +84,8 @@ public class MainActivity extends Activity {
             main = (LinearLayout) findViewById(R.id.layoutMain);
 
             //Get files
-            files = jsonToObject(readFile(FILES));
+            files = fileGetter.getSavedObjects(FILES,this);
+//            files = jsonToObject(readFile(FILES));
             key = files.key;
             iv = files.iv;
             String url = files.URL;
