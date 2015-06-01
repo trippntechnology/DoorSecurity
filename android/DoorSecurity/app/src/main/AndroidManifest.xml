@@ -24,7 +24,7 @@
             android:name=".Register"
             android:label="@string/title_activity_register"/>
 
-        <receiver android:name=".DoorWidgetProvider">
+        <receiver android:name=".WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -32,7 +32,7 @@
                 android:resource="@xml/widget_provider" />
         </receiver>
         <service
-        android:name=".RelayWidgetService"
+        android:name=".WidgetService"
         android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 

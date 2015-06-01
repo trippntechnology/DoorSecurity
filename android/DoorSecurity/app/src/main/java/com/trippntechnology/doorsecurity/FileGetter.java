@@ -1,6 +1,10 @@
 package com.trippntechnology.doorsecurity;
 
 import android.content.Context;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.telephony.TelephonyManager;
+
 import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -12,6 +16,17 @@ public class FileGetter {
     Gson gson = new Gson();
 
     public FileGetter(){}
+
+    public String getPhoneNumber(Context context) {
+        TelephonyManager tMgr = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return tMgr.getLine1Number();
+    }
+
+    public String getMacAddress(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        return wInfo.getMacAddress();
+    }
 
     public SavedObjects getSavedObjects(String filename,Context context){
         return jsonToObject(readFile(filename,context));
