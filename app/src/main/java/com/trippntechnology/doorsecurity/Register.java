@@ -1,6 +1,5 @@
 package com.trippntechnology.doorsecurity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,11 +7,8 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -30,7 +26,6 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import retrofit.Callback;
@@ -42,10 +37,6 @@ import retrofit.client.Response;
 
 public class Register extends Activity {
 
-    private static final String REGISTRATION_FILE = "RegistrationKey";
-    private static final String IV_FILE = "RegistrationIV";
-    private static final String URL = "Url";
-    private static final String FILES = "RegistrationFiles";
 
     private String url;
     private EditText token, urlBox;
@@ -127,7 +118,7 @@ public class Register extends Activity {
             files.URL = url;
             String json = gson.toJson(files);
             try {
-                FileOutputStream fos = openFileOutput(FILES,MODE_PRIVATE);
+                FileOutputStream fos = openFileOutput(MainActivity.FILES,MODE_PRIVATE);
                 fos.write(json.getBytes());
                 fos.close();
                 progress.dismiss();

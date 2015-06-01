@@ -3,6 +3,8 @@ package com.trippntechnology.doorsecurity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,8 +12,6 @@ import android.graphics.Color;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -22,19 +22,15 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 import javax.crypto.spec.IvParameterSpec;
@@ -50,11 +46,12 @@ import retrofit.client.Response;
 public class MainActivity extends Activity {
 
 
-    private static final String FILES = "RegistrationFiles";
+    public static final String FILES = "com.trippntechnology.doorsecurity.RegistrationFiles";
     private byte[] key;
     private byte[] iv;
     private byte[] encrypted;
     private String url;
+    private Context context;
     private Interface client;
     private DoorObject door = new DoorObject();
     private AuthToken authToken = new AuthToken();
@@ -69,6 +66,7 @@ public class MainActivity extends Activity {
     private ProgressDialog progress;
     private AlertDialog alertDialog;
     private AlertDialog.Builder builder;
+    private Relay[] mainRelays;
     private boolean hasRelays;
 
 
@@ -81,7 +79,7 @@ public class MainActivity extends Activity {
 
             //Get layout
             main = (LinearLayout) findViewById(R.id.layoutMain);
-
+            context = this;
             //Get files
             files = fileGetter.getSavedObjects(FILES, this);
 //            files = jsonToObject(readFile(FILES));
@@ -94,7 +92,7 @@ public class MainActivity extends Activity {
             ivSpec = new IvParameterSpec(iv);
 
             //Get number
-            door.PhoneNumber = getPhoneNumber();
+            door.PhoneNumber = fileGetter.getPhoneNumber(this);
 
             //Create restcall
             OkHttpClient http = new OkHttpClient();
@@ -165,10 +163,10 @@ public class MainActivity extends Activity {
     protected void onStart() {
         progress.dismiss();
         super.onStart();
-        if (files.relays != null) {
-            createLayout(files.relays);
-            hasRelays = true;
-        }
+//        if (files.relays != null) {
+//            createLayout(files.relays);
+//            hasRelays = true;
+//        }
         getDoorsRequestCall();
     }
 
@@ -187,9 +185,9 @@ public class MainActivity extends Activity {
     public void getDoorsRequestCall() {
         progress.setTitle(R.string.progress_title_main);
         progress.setMessage("Getting available doors");
-        if (!hasRelays) {
+//        if (!hasRelays) {
             progress.show();
-        }
+//        }
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         if (encrypted == null) {
             Toast toast = Toast.makeText(this, "Encryption Error", Toast.LENGTH_SHORT);
@@ -197,14 +195,18 @@ public class MainActivity extends Activity {
             progress.dismiss();
         } else {
             door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-            final boolean finalHasRelays = hasRelays;
+//            final boolean finalHasRelays = hasRelays;
             client.getDoors(door, new Callback<GetRelays>() {
                 @Override
                 public void success(GetRelays getRelays, Response response) {
-                    if (finalHasRelays) {
-                        newDoors(getRelays.Relays);
-                    } else {
-                        createLayout(getRelays.Relays);
+                    if(getRelays.Relays != null) {
+//                        if (finalHasRelays) {
+//                            newDoors(getRelays.Relays);
+//                        } else {
+                            createLayout(getRelays.Relays);
+//                        }
+                    }else {
+                        Toast.makeText(getApplicationContext(), getRelays.Message, Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -216,32 +218,27 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void newDoors(final Relay[] relays) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle(R.string.newDoorsTitle);
-        alert.setMessage(R.string.newDoorsMessage);
-        alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                createLayout(relays);
-            }
-        });
-        alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        SavedObjects newFile = new SavedObjects(iv,key,relays,url);
-        String json = gson.toJson(newFile);
-        try {
-            FileOutputStream fos = openFileOutput(FILES, MODE_PRIVATE);
-            fos.write(json.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void newDoors(final Relay[] relayys) {
+        if(relayys != files.relays) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.newDoorsTitle);
+            alert.setMessage(R.string.newDoorsMessage);
+            alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    main.removeAllViews();
+                    createLayout(relayys);
+                }
+            });
+            alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.show();
+            saveRelays(relayys);
         }
     }
 
@@ -272,15 +269,8 @@ public class MainActivity extends Activity {
                 ll.setAnimation(animation);
                 main.addView(ll);
             }
-        } else {
-
-            TextView tv = new TextView(getApplicationContext());
-            tv.setText(R.string.relay_return_error);
-            tv.setTextColor(Color.RED);
-            tv.setGravity(Gravity.CENTER);
-            tv.setTextSize(40);
-            main.addView(tv);
         }
+        saveRelays(relays);
         progress.dismiss();
     }
 
@@ -315,6 +305,18 @@ public class MainActivity extends Activity {
         if (error.getMessage().contains("failed to connect")) {
             builder.setTitle(R.string.connection_error);
             builder.setMessage(R.string.retry_message);
+            Button b = new Button(this);
+            b.setText("Retry");
+            b.setGravity(Gravity.CENTER);
+            b.setLayoutParams(buttonParams);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getDoorsRequestCall();
+                    main.removeAllViews();
+                }
+            });
+            main.addView(b);
         } else {
             TextView tv = new TextView(this);
             tv.setText(R.string.unknown_error);
@@ -322,6 +324,7 @@ public class MainActivity extends Activity {
             tv.setTextColor(Color.RED);
             main.addView(tv);
         }
+
         alertDialog.dismiss();
         alertDialog = builder.create();
         alertDialog.show();
@@ -336,30 +339,17 @@ public class MainActivity extends Activity {
 
 
     //Builders and File readers
-//    public boolean checkFileExistence(String fileName) {
-//        File file = getBaseContext().getFileStreamPath(fileName);
-//        return file.exists();
-//    }
-
-
-    public byte[] readFile(String filename) {
-        int bytesRead;
-        byte[] bytes = null;
+    public void saveRelays(Relay[] relays){
+        SavedObjects newFile = new SavedObjects(iv,key,relays,url);
+        String json = gson.toJson(newFile);
         try {
-            InputStream fileReader = this.openFileInput(filename);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-
-            while ((bytesRead = fileReader.read(buffer)) != -1) {
-                baos.write(buffer, 0, bytesRead);
-            }
-
-            bytes = baos.toByteArray();
+            FileOutputStream fos = openFileOutput(FILES, MODE_PRIVATE);
+            fos.write(json.getBytes());
+            fos.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return bytes;
+
     }
 
     public AlertDialog.Builder alertBuilder() {
@@ -382,13 +372,6 @@ public class MainActivity extends Activity {
         return alert;
     }
 
-
-    @Override
-    protected void onStop() {
-
-        super.onStop();
-    }
-
     //Delete Files
     public void deleteFiles() {
         File file = getBaseContext().getFileStreamPath(FILES);
@@ -406,15 +389,7 @@ public class MainActivity extends Activity {
         return wInfo.getMacAddress();
     }
 
-    public String getPhoneNumber() {
-        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return tMgr.getLine1Number();
-    }
 
-    public SavedObjects jsonToObject(byte[] data) {
-        String jsonString = new String(data);
-        return gson.fromJson(jsonString, SavedObjects.class);
-    }
 
 
     //Action Bar
@@ -445,7 +420,7 @@ public class MainActivity extends Activity {
             SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
             IvParameterSpec ivSpec = new IvParameterSpec(iv);
             //Encrypt
-            encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
+            encrypted = authToken.encrypt(keySpec, ivSpec, fileGetter.getMacAddress(context));
             if (encrypted != null) {
                 door.AuthToken = Base64.encodeToString(encrypted, Base64.NO_WRAP);
                 door.ID = v.getId();

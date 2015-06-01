@@ -16,7 +16,7 @@
         <Button
             android:id="@+id/widgetText"
             android:textSize="25sp"
-            style="@style/tnt_button"
+            style="@style/tnt_button_v21"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </LinearLayout>

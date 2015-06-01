@@ -35,5 +35,5 @@
     <string name="newDoorsTitle">New doors</string>
     <string name="newDoorsMessage">There are new doors available. Would you like to display them now?</string>
     <string name="no_doors_for_widget">Please register.
-    If you have registered then there are no available doors please open the app.</string>
+    If you have registered then there are no doors available to display</string>
 </resources>
