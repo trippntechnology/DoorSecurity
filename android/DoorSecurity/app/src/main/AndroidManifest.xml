@@ -22,7 +22,8 @@
         </activity>
         <activity
             android:name=".Register"
-            android:label="@string/title_activity_register"/>
+            android:label="@string/title_activity_register"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
 
         <receiver android:name=".WidgetProvider">
             <intent-filter>

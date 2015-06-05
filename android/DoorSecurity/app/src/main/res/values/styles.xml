@@ -2,26 +2,27 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <item name="android:textColor">@color/md_grey_900</item>
-        <item name="android:windowBackground">@color/md_grey_400</item>
-        <item name="android:colorPrimaryDark">@color/md_green_800</item>
-        <item name="android:colorPrimary">@color/md_green_600</item>
-        <item name="android:colorAccent">@color/md_red_600</item>
+        <item name="android:textColor">@color/whiteText</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorPrimaryDark">@color/dark</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorAccent">@color/accent</item>
         <item name="android:actionBarStyle">@style/actionBar</item>
         <item name="android:buttonStyle">@style/tnt_button</item>
-        <item name="android:textColorHint">@color/md_grey_700</item>
+        <item name="android:textColorHint">@color/textHint</item>
         <item name="android:editTextBackground">@drawable/tnt_edit_text</item>
+        <item name="android:scrollViewStyle">@style/tnt_scrollView</item>
 
     </style>
 
     <style name="actionBar" parent="android:Widget.Holo.ActionBar.Solid">
-        <item name="android:background">@color/md_green_500</item>
+        <item name="android:background">@color/primary</item>
         <item name="android:titleTextStyle">@style/actionBarTitle</item>
         <item name="android:displayOptions">showTitle</item>
     </style>
 
     <style name="actionBarTitle" parent="android:TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/md_white_1000</item>
+        <item name="android:textColor">@color/whiteText</item>
     </style>
 
     <style name="tnt_button" parent="android:Widget.Holo.Button">
@@ -32,7 +33,11 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
-        <item name="android:textColor">@color/md_grey_100</item>
+        <item name="android:textColor">@color/whiteText</item>
+    </style>
+    <style name="tnt_scrollView" parent="android:Widget.Holo.ScrollView">
+        <item name="android:overScrollFooter">@color/extraDark</item>
+        <item name="android:overScrollHeader">@color/extraDark</item>
     </style>
 
 </resources>

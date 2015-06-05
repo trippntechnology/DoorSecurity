@@ -176,17 +176,24 @@ public class MainActivity extends Activity {
         progress.dismiss();
         alertDialog.dismiss();
         super.onPause();
-
-
     }
 
+    @Override
+    protected void onStop() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, WidgetProvider.class));
+        if (appWidgetIds.length > 0) {
+            new WidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds);
+        }
+        super.onStop();
+    }
 
     //Create the Layout
     public void getDoorsRequestCall() {
         progress.setTitle(R.string.progress_title_main);
         progress.setMessage("Getting available doors");
 //        if (!hasRelays) {
-            progress.show();
+        progress.show();
 //        }
         encrypted = authToken.encrypt(keySpec, ivSpec, getMacAddress());
         if (encrypted == null) {
@@ -199,13 +206,13 @@ public class MainActivity extends Activity {
             client.getDoors(door, new Callback<GetRelays>() {
                 @Override
                 public void success(GetRelays getRelays, Response response) {
-                    if(getRelays.Relays != null) {
+                    if (getRelays.Relays != null) {
 //                        if (finalHasRelays) {
 //                            newDoors(getRelays.Relays);
 //                        } else {
-                            createLayout(getRelays.Relays);
+                        createLayout(getRelays.Relays);
 //                        }
-                    }else {
+                    } else {
                         Toast.makeText(getApplicationContext(), getRelays.Message, Toast.LENGTH_LONG).show();
                     }
                 }
@@ -219,7 +226,7 @@ public class MainActivity extends Activity {
     }
 
     public void newDoors(final Relay[] relayys) {
-        if(relayys != files.relays) {
+        if (relayys != files.relays) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.newDoorsTitle);
             alert.setMessage(R.string.newDoorsMessage);
@@ -305,18 +312,18 @@ public class MainActivity extends Activity {
         if (error.getMessage().contains("failed to connect")) {
             builder.setTitle(R.string.connection_error);
             builder.setMessage(R.string.retry_message);
-            Button b = new Button(this);
-            b.setText("Retry");
-            b.setGravity(Gravity.CENTER);
-            b.setLayoutParams(buttonParams);
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getDoorsRequestCall();
-                    main.removeAllViews();
-                }
-            });
-            main.addView(b);
+//            Button b = new Button(this);
+//            b.setText("Retry");
+//            b.setGravity(Gravity.CENTER);
+//            b.setLayoutParams(buttonParams);
+//            b.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getDoorsRequestCall();
+//                    main.removeAllViews();
+//                }
+//            });
+//            main.addView(b);
         } else {
             TextView tv = new TextView(this);
             tv.setText(R.string.unknown_error);
@@ -339,8 +346,8 @@ public class MainActivity extends Activity {
 
 
     //Builders and File readers
-    public void saveRelays(Relay[] relays){
-        SavedObjects newFile = new SavedObjects(iv,key,relays,url);
+    public void saveRelays(Relay[] relays) {
+        SavedObjects newFile = new SavedObjects(iv, key, relays, url);
         String json = gson.toJson(newFile);
         try {
             FileOutputStream fos = openFileOutput(FILES, MODE_PRIVATE);
@@ -388,8 +395,6 @@ public class MainActivity extends Activity {
         WifiInfo wInfo = wifiManager.getConnectionInfo();
         return wInfo.getMacAddress();
     }
-
-
 
 
     //Action Bar

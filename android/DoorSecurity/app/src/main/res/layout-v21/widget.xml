@@ -3,13 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/widget_margin"
-    android:background="@color/md_red_600"
+    android:background="@color/accent"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/widgetTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/md_green_800"
+        android:background="@color/dark"
         android:paddingBottom="2dp"
         android:paddingLeft="5dp"
         android:paddingRight="7dp"
@@ -24,20 +25,20 @@
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:id="@+id/widgetTitle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|right"
             android:text="@string/app_name"
-            android:textColor="@color/md_grey_100"
+            android:textColor="@color/whiteText"
             android:textSize="25sp" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/widgetListView"
+        style="@style/tnt_scrollView_v21"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/md_grey_400"
+        android:background="@color/background"
         android:layout_marginLeft="2dp"
         android:layout_marginRight="2dp"
         android:layout_marginBottom="2dp"
@@ -47,14 +48,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/empty_view"
-        android:background="@color/md_grey_400"
+        android:background="@color/background"
         android:visibility="gone">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/no_doors_for_widget"
-            android:textColor="@color/md_black_1000"
+            android:textColor="@color/text"
             android:textSize="20sp" />
     </LinearLayout>
 

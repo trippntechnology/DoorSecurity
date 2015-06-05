@@ -3,19 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    >
+    android:isScrollContainer="true"
+    android:background="@drawable/background">
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/urlText"
+        android:minWidth="150dp"
+        android:gravity="center_horizontal"
+        android:hint="@string/enter_url"
+        android:text="@string/url"
+        android:layout_gravity="center_horizontal"
+        android:layout_above="@+id/tokenText"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tokenText"
-        android:layout_marginTop="178dp"
         android:minWidth="150dp"
         android:hint="@string/enter_token_string"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -23,21 +37,9 @@
         android:text="@string/register_string"
         android:id="@+id/registerButton"
         android:onClick="registerButton"
-        android:nestedScrollingEnabled="false"
-        android:layout_centerVertical="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/tokenText"
         android:layout_centerHorizontal="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/urlText"
-        android:layout_alignBottom="@+id/tokenText"
-        android:layout_marginBottom="44dp"
-        android:minWidth="150dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:hint="Enter URL"
-        android:text="@string/url" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,9 +47,36 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="@string/copyright"
         android:id="@+id/textView"
+        android:gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/app_name"
+            android:id="@+id/textView3"
+            android:textStyle="bold"
+            android:textSize="50sp"
+            android:textColor="@color/text"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/imageView2"
+            android:src="@mipmap/ic_launcher"
+            android:layout_weight="1"
+            android:layout_gravity="center" />
+    </LinearLayout>
 
 
 </RelativeLayout>
