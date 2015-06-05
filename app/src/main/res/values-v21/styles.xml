@@ -2,20 +2,21 @@
 
     <style name="AppTheme" parent="android:Theme.Material.Light">
         <!-- Customize your theme here. -->
-        <item name="android:textColorPrimary">@color/md_white_1000</item>
-        <item name="android:textColorHint">@color/md_grey_700</item>
-        <item name="android:textColor">@color/md_grey_900</item>
-        <item name="android:colorAccent">@color/md_red_600</item>
-        <item name="android:colorPrimary">@color/md_green_500</item>
-        <item name="android:colorPrimaryDark">@color/md_green_700</item>
-        <item name="android:windowBackground">@color/md_grey_400</item>
-        <item name="android:navigationBarColor">@color/md_green_500</item>
+        <item name="android:textColorPrimary">@color/whiteText</item>
+        <item name="android:textColorHint">@color/textHint</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/dark</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:navigationBarColor">@color/primary</item>
         <item name="android:editTextStyle">@style/edit_text</item>
         <item name="android:buttonStyle">@style/tnt_button_v21</item>
+        <item name="android:scrollViewStyle">@style/tnt_scrollView_v21</item>
     </style>
 
     <style name="edit_text" parent="android:Widget.Material.EditText">
-        <item name="android:textColor">@color/md_grey_900</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
     <style name="tnt_button_v21" parent="android:Widget.Material.Button">
@@ -26,7 +27,12 @@
         <item name="android:layout_margin">3dp</item>
         <item name="android:elevation">1dp</item>
         <item name="android:translationZ">1dp</item>
-        <item name="android:textColor">@color/md_grey_100</item>
+        <item name="android:textColor">@color/whiteText</item>
+    </style>
+
+    <style name="tnt_scrollView_v21" parent="android:Widget.Material.ScrollView">
+        <item name="android:overScrollFooter">@color/extraDark</item>
+        <item name="android:overScrollHeader">@color/extraDark</item>
     </style>
 
 </resources>

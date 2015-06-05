@@ -4,7 +4,7 @@
         android:state_enabled="false">
         <shape>
             <solid
-                android:color="@color/md_grey_800"/>
+                android:color="@color/textHint"/>
             <corners
                 android:radius="2dp"/>
         </shape>
@@ -14,7 +14,7 @@
         android:state_enabled="true">
         <shape>
             <solid
-                android:color="@color/md_green_800"/>
+                android:color="@color/dark"/>
             <corners
                 android:radius="2dp"/>
         </shape>
@@ -25,7 +25,7 @@
         android:state_enabled="true">
         <shape>
             <solid
-                android:color="@color/md_green_900"/>
+                android:color="@color/dark"/>
             <corners
                 android:radius="2dp"/>
         </shape>
@@ -35,7 +35,7 @@
         android:state_enabled="true">
         <shape>
             <solid
-                android:color="@color/md_green_600"/>
+                android:color="@color/primary"/>
             <corners
                 android:radius="2dp"/>
         </shape>

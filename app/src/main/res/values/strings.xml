@@ -36,4 +36,5 @@
     <string name="newDoorsMessage">There are new doors available. Would you like to display them now?</string>
     <string name="no_doors_for_widget">Please register.
     If you have registered then there are no doors available to display</string>
+    <string name="enter_url">Enter URL</string>
 </resources>

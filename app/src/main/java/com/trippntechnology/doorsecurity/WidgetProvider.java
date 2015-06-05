@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -38,31 +39,37 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int i = 0; i < appWidgetIds.length; ++i) {
 
-            RemoteViews widget = new RemoteViews(context.getPackageName(), R.layout.widget);
-            Intent startActivityIntent = new Intent(context, MainActivity.class);
-            PendingIntent startActivityPendingIntent = PendingIntent.getActivity(context, 0, startActivityIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            widget.setPendingIntentTemplate(R.id.title, startActivityPendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetIds[i], widget);
-
-            Intent intent = new Intent(context, WidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);  // Identifies the particular widget...
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+// Make the pending intent unique...
             intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent pendIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+            views.setOnClickPendingIntent(R.id.widgetTitle, pendIntent);
+            appWidgetManager.updateAppWidget(appWidgetIds[i],views);
+
+
+
+            //List View
+            Intent listIntent = new Intent(context, WidgetService.class);
+            listIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+
+            listIntent.setData(Uri.parse(listIntent.toUri(Intent.URI_INTENT_SCHEME)));
             RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget);
-            rv.setRemoteAdapter(appWidgetIds[i], R.id.widgetListView, intent);
+            rv.setRemoteAdapter(appWidgetIds[i], R.id.widgetListView, listIntent);
 
             rv.setEmptyView(R.id.widgetListView, R.id.empty_view);
 
-            Intent toastIntent = new Intent(context, WidgetProvider.class);
+            Intent listButtons = new Intent(context, WidgetProvider.class);
 
-            toastIntent.setAction(WidgetProvider.TOAST_ACTION);
-            toastIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent toastPendingIntent = PendingIntent.getBroadcast(context, 0, toastIntent,
+            listButtons.setAction(WidgetProvider.TOAST_ACTION);
+            listButtons.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetIds[i]);
+            listIntent.setData(Uri.parse(listIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            PendingIntent listPendingIntent = PendingIntent.getBroadcast(context, 0, listButtons,
                     PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setPendingIntentTemplate(R.id.widgetListView, toastPendingIntent);
+            rv.setPendingIntentTemplate(R.id.widgetListView, listPendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetIds[i], rv);
         }
@@ -71,6 +78,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(final Context context, Intent intent) {
+
+        Log.d("TAG", "onReceive() " + intent.getAction());
+
         AppWidgetManager mgr = AppWidgetManager.getInstance(context);
         if (intent.getAction().equals(TOAST_ACTION)) {
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -121,7 +131,11 @@ public class WidgetProvider extends AppWidgetProvider {
                 toast.show();
             }
 
+        }else if (intent.getAction().equals(TITLE)){
+            Toast toast = Toast.makeText(context, "TEST", Toast.LENGTH_SHORT);
+            toast.show();
         }
         super.onReceive(context, intent);
     }
+
 }

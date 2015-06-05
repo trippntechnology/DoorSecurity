@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">@color/md_green_500</color>
+    <color name="dark">@color/md_green_700</color>
+    <color name="accent">@color/md_red_600</color>
+    <color name="background">@color/md_grey_400</color>
+    <color name="text">@color/md_grey_900</color>
+    <color name="textHint">@color/md_grey_700</color>
+    <color name="whiteText">@color/md_grey_100</color>
+    <color name="extraDark">@color/md_green_900</color>
+
+
     <color name="md_red_50">#FFEBEE</color>
     <color name="md_red_100">#FFCDD2</color>
     <color name="md_red_200">#EF9A9A</color>
