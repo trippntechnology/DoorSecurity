@@ -38,7 +38,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="6a71ec90-a52d-4dc0-ac09-09464fdebe65" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="DoorSecurity.iws" />
