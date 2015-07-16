@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.trippntechnology.tntlibrary.FileGetter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +42,7 @@ public class WidgetFactory implements RemoteViewsService.RemoteViewsFactory {
                 relayList.add(new Relay("Relay"+i,i));
             }
         }else {
-            FileGetter fileGetter = new FileGetter();
+            FileOverrides fileGetter = new FileOverrides();
             phone = fileGetter.getPhoneNumber(context);
             if (fileGetter.checkFileExistence(MainActivity.FILES, context)){
                 SavedObjects savedObjects = fileGetter.getSavedObjects(MainActivity.FILES,context);

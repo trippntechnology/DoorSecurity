@@ -14,7 +14,6 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.okhttp.OkHttpClient;
+import com.trippntechnology.tntlibrary.FileGetter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
     private DoorObject door = new DoorObject();
     private AuthToken authToken = new AuthToken();
     private SavedObjects files = new SavedObjects();
-    private FileGetter fileGetter = new FileGetter();
+    private FileOverrides fileGetter = new FileOverrides();
     private Gson gson = new Gson();
     private SecretKeySpec keySpec;
     private IvParameterSpec ivSpec;
